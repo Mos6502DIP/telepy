@@ -1,19 +1,20 @@
+import errno
 import socket
+import datetime
 import time
 
 buffer = 0
 
-def setting(setting:str):
 
-        with open("server_config.txt") as fp:
-            lines = fp.readlines()
-            for line in lines:
-                if line.strip()[0] != "#":
-                    setting_line = line.strip().split("=")
-                    if setting_line[0] == setting:
-                        return setting_line[1]
+def setting(setting: str):
 
-
+    with open("server_config.txt") as fp:
+        lines = fp.readlines()
+        for line in lines:
+            if line.strip()[0] != "#":
+                setting_line = line.strip().split("=")
+                if setting_line[0] == setting:
+                    return setting_line[1]
 
 
 def test():
@@ -41,7 +42,7 @@ def setup_log(log_file):
     Sct = socket.socket()  # creating the socket
     ports = setting("port")
     Sct.bind(("", int(ports)))  # Bind port
-    Sct.listen(int(setting("listen"))) # listens for clients
+    Sct.listen(int(setting("listen")))  # listens for clients
     log(log_file, f'Tele py server started on port:{ports} and listening for {setting("listen")} Clients!')
     return Sct
 
@@ -56,7 +57,8 @@ def printt(string, client):
             print("Error: Client did not acknowledge the message.")
 
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
 
 
 def inputt(string, client):
@@ -68,14 +70,15 @@ def inputt(string, client):
         if acknowledgment != "ACK":
             print("Error: Client did not acknowledge the message.")
 
-
         return client.recv(1024).decode()
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
+
         return None
 
 
-def closet(string, client):
+def closet(log_file, string, client, add):
     try:
         time.sleep(buffer)
         client.send(bytes(f"2{string}", "utf-8"))
@@ -85,9 +88,10 @@ def closet(string, client):
             print("Error: Client did not acknowledge the message.")
 
         client.close()
-        print("User disconnected!")
+        log(log_file, f"{add} has disconnected from the server at {datetime.datetime.now()}")
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
 
 
 def cls(client):
@@ -100,7 +104,9 @@ def cls(client):
             print("Error: Client did not acknowledge the message.")
 
     except socket.error as e:
-        print(f"Socket error: {e}")
+
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
 
 
 def blankline(client):
@@ -113,7 +119,8 @@ def blankline(client):
             print("Error: Client did not acknowledge the message.")
 
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
 
 
 def password(string, client):
@@ -127,7 +134,9 @@ def password(string, client):
 
         return client.recv(1024).decode()
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
+
         return None
 
 
@@ -142,7 +151,9 @@ def client_version(client):
 
         return client.recv(1024).decode()
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
+
         return None
 
 
@@ -156,7 +167,8 @@ def system_command(string, client):
             print("Error: Client did not acknowledge the message.")
 
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
 
 
 def hidden_input(string, client):
@@ -170,5 +182,7 @@ def hidden_input(string, client):
 
         return client.recv(1024).decode()
     except socket.error as e:
-        print(f"Socket error: {e}")
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
+
         return None
