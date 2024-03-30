@@ -1,0 +1,4 @@
+v1.2.1
+New format for sending data where sent data will
+be formatted in way where it should be 'future' proof
+to updates and changes.

@@ -50,7 +50,7 @@ def setup_log(log_file):
 def printt(string, client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"0{string}", "utf-8"))
+        client.send(bytes(f"0|{string}", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -64,7 +64,7 @@ def printt(string, client):
 def inputt(string, client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"1{string}", "utf-8"))
+        client.send(bytes(f"1|{string}", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -81,7 +81,7 @@ def inputt(string, client):
 def closet(log_file, string, client, add):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"2{string}", "utf-8"))
+        client.send(bytes(f"2|{string}", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -97,7 +97,7 @@ def closet(log_file, string, client, add):
 def cls(client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"3", "utf-8"))
+        client.send(bytes(f"3|", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -112,7 +112,7 @@ def cls(client):
 def blankline(client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"4", "utf-8"))
+        client.send(bytes(f"4|", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -126,7 +126,7 @@ def blankline(client):
 def password(string, client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"5{string}", "utf-8"))
+        client.send(bytes(f"5|{string}", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -143,7 +143,7 @@ def password(string, client):
 def client_version(client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"6ver", "utf-8"))
+        client.send(bytes(f"6|", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -160,7 +160,7 @@ def client_version(client):
 def system_command(string, client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"7{string}", "utf-8"))
+        client.send(bytes(f"7|{string}", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -174,7 +174,7 @@ def system_command(string, client):
 def hidden_input(string, client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"8{string}", "utf-8"))
+        client.send(bytes(f"8|{string}", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
@@ -186,3 +186,25 @@ def hidden_input(string, client):
             print(f"Socket error: {e}")
 
         return None
+
+
+def printc(string, color, client):
+    colours = ["black", "grey", "red", "green", "yellow", "blue", "magenta", "cyan", "light_grey", "dark_grey", "light_red", "light_green", "light_yellow", "light_blue", "light_magenta", "light_cyan", "white"]
+
+    try:
+        time.sleep(buffer)
+        if color in colours:
+            client.send(bytes(f"9|{color}|{string}", "utf-8"))
+
+        else:
+            print("Error: Invalid colour")
+            client.send(bytes(f"9|white|{string}", "utf-8"))
+
+
+        acknowledgment = client.recv(1024).decode()
+        if acknowledgment != "ACK":
+            print("Error: Client did not acknowledge the message.")
+
+    except socket.error as e:
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")

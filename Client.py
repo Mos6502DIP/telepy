@@ -2,8 +2,9 @@ import hashlib
 import socket
 import os
 from getpass import getpass
+from termcolor import colored
 
-ver = "1.1.1"
+ver = "1.2.1"
 
 
 def hash_string(password):
@@ -26,21 +27,24 @@ def setting(setting:str):
 
 def  dum_ter(server, cSct):
 
-    server_m = server[0]  # the first digit is the mode set by the the server.
+    server_m = server[0]  # the first digit is the mode set by the server.
+
+    data = server[len(server) - 1]
+    
     match server_m:
         case "0":
-            print(server[1:])
+            print(data)
             return None
 
         case "1":
-            user_input = input(server[1:])
+            user_input = input(data)
             if user_input == "":
                 user_input = "None"
             cSct.send(bytes(user_input, "utf-8"))
             return None
 
         case "2":
-            print(server[1:])
+            print(data)
             cSct.close()
             input("Press enter to return to prompt!")
             return "exit"
@@ -54,7 +58,7 @@ def  dum_ter(server, cSct):
             return None
 
         case "5":
-            user_input = hash_string(str(getpass(server[1:])))
+            user_input = hash_string(str(getpass(data)))
             if user_input == "":
                 user_input = "None"
             cSct.send(bytes(user_input, "utf-8"))
@@ -66,18 +70,21 @@ def  dum_ter(server, cSct):
 
         case "7":
             if setting("commands") == "True":
-                os.system(server[1:])
+                os.system(data)
             else:
-                print(f"Command({server[1:]}) has not been allowed to run.")
+                print(f"Command({data}) has not been allowed to run.")
             return None
 
         case "8":
-            user_input = getpass(server[1:])
+            user_input = getpass(data)
             if user_input == "":
                 user_input = "None"
             cSct.send(bytes(user_input, "utf-8"))
             return None
 
+        case "9":
+            print(colored(data, server[1]))
+            return None
 
         case _:
             print("Out dated client")
@@ -99,7 +106,7 @@ P'   MM   `7      MM                MM   `MM.
                                                 ,V      
                                              OOb"       
         ''')
-        print(f"Telepy by Peter Cakebread 2024 v{ver}")
+        print(colored("Telepi", "green"), "by", colored("Peter Cakebread", "blue"), f" 2024 v{ver}")
         ip = input("Server ip:>")
         port = 1998
         server = ip.split(":")
@@ -155,7 +162,7 @@ P'   MM   `7      MM                MM   `MM.
             server_rev = Sct.recv(1024).decode()
 
             Sct.send("ACK".encode())
-            if dum_ter(server_rev, Sct) is not None:
+            if dum_ter(server_rev.split("|"), Sct) is not None:
                 break
         os.system("cls")
     except socket.error as e:

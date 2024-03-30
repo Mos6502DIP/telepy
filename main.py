@@ -43,10 +43,19 @@ def clientside(client, add):
     tp.inputt("Press enter!", client)
     tp.cls(client)
     tp.system_command("curl wttr.in", client)
-
     tp.inputt("Press enter!", client)
-    tp.closet(f"Disconnected by user!", client)
-    log(log_file, f"{add} has disconnected to server at {time()}")
+
+    tp.cls(client)
+    colours = ["black", "grey", "red", "green", "yellow", "blue", "magenta", "cyan",
+               "light_grey", "dark_grey", "light_red", "light_green", "light_yellow",
+               "light_blue", "light_magenta", "light_cyan", "white"]
+
+    for colour in colours:
+        tp.printc("Telepy 2024", colour, client)
+
+
+    tp.closet(log_file,f"Disconnected by user!", client, add)
+
 
 
 
