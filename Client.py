@@ -1,10 +1,11 @@
 import hashlib
+import json
 import socket
 import os
 from getpass import getpass
 from termcolor import colored
 
-ver = "1.2.1"
+ver = "1.2.3"
 
 
 def hash_string(password):
@@ -24,6 +25,51 @@ def setting(setting:str):
     except:
         print("No config.txt")
 
+
+def colour(text, color, background=None):
+    colors = {
+        "black": "\033[30m",
+        "red": "\033[31m",
+        "green": "\033[32m",
+        "yellow": "\033[33m",
+        "blue": "\033[34m",
+        "magenta": "\033[35m",
+        "cyan": "\033[36m",
+        "white": "\033[37m",
+        "light_black": "\033[90m",
+        "light_red": "\033[91m",
+        "light_green": "\033[92m",
+        "light_yellow": "\033[93m",
+        "light_blue": "\033[94m",
+        "light_magenta": "\033[95m",
+        "light_cyan": "\033[96m",
+        "light_white": "\033[97m",
+        'reset': '\033[0m'
+    }
+    backgrounds = {
+        "black": "\033[40m",
+        "red": "\033[41m",
+        "green": "\033[42m",
+        "yellow": "\033[43m",
+        "blue": "\033[44m",
+        "magenta": "\033[45m",
+        "cyan": "\033[46m",
+        "white": "\033[47m",
+        "light_black": "\033[100m",
+        "light_red": "\033[101m",
+        "light_green": "\033[102m",
+        "light_yellow": "\033[103m",
+        "light_blue": "\033[104m",
+        "light_magenta": "\033[105m",
+        "light_cyan": "\033[106m",
+        "light_white": "\033[107m",
+        'reset': '\033[0m'
+    }
+
+    color_code = colors.get(color, colors['reset'])
+    background_code = backgrounds.get(background, '')
+
+    return f"{background_code}{color_code}{text}{colors['reset']}"
 
 def  dum_ter(server, cSct):
 
@@ -83,7 +129,14 @@ def  dum_ter(server, cSct):
             return None
 
         case "9":
-            print(colored(data, server[1]))
+            print(colour(data, json.loads(server[1])[0], json.loads(server[1])[1]))
+            return None
+
+        case "10":
+
+            screen = json.loads(data)
+            print('\n'.join([''.join(['{:4}'.format(item) for item in row])
+                             for row in screen]))
             return None
 
         case _:
@@ -106,7 +159,7 @@ P'   MM   `7      MM                MM   `MM.
                                                 ,V      
                                              OOb"       
         ''')
-        print(colored("Telepi", "green"), "by", colored("Peter Cakebread", "blue"), f" 2024 v{ver}")
+        print(colour("Telepi", "green"), "by", colour("Peter Cakebread", "blue"), f" 2024 v{ver}")
         ip = input("Server ip:>")
         port = 1998
         server = ip.split(":")

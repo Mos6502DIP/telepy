@@ -3,15 +3,50 @@ import threading
 import datetime
 
 
+
+def screen_generate(x, y, char):
+    mem = []
+    for i in range(x):
+        mem.append([])
+        if i % 2 == 1:
+            for j in range(y):
+                if j % 2 == 1:
+                    mem[i].append(char)
+                else:
+                    mem[i].append(" ")
+        else:
+            for j in range(y):
+                if j % 2 == 1:
+                    mem[i].append(" ")
+                else:
+                    mem[i].append(char)
+
+    return mem
+
+def screen_generate_colour(colours, char):
+    mem = []
+    for i in range(len(colours)):
+        mem.append([])
+
+        for j in range(len(colours)):
+            character = [char, [colours[j], colours[i]]]
+            mem[i].append(character)
+
+
+
+    return mem
+
+
+
 def txt(file_name, client_c):
     with open(file_name+".txt", "r") as fp:
-            lines = fp.readlines()
+        lines = fp.readlines()
 
-            for line in lines:
-                if line.strip() == "@":
-                    tp.blankline(client_c)
-                else:
-                    tp.printt(line.strip(), client_c)
+        for line in lines:
+            if line.strip() == "@":
+                tp.blankline(client_c)
+            else:
+                tp.printt(line.strip(), client_c)
 
 
 def log(filename, text):
@@ -24,34 +59,54 @@ def date():
     current_datetime = datetime.datetime.now()
     return current_datetime.date()
 
+
 def time():
     return datetime.datetime.now()
 
 
 def clientside(client, add):
-
+    # Basic functions test
     tp.cls(client)
     c_version = tp.client_version(client)
     tp.printt("Print test!", client)
     tp.printt(f"Client version {c_version}", client)
-    user_input = tp.inputt("Enter Normal input:>", client)
-    password = tp.password("Enter Password input:>", client)
-    hidden = tp.hidden_input("Enter Hidden input:>", client)
-    tp.printt(f"Normal input:{user_input} Password input:{password} Hidden input:{hidden}", client)
+    if tp.setting("telepi_debug") != "True":
+        user_input = tp.inputt("Enter Normal input:>", client)
+        password = tp.password("Enter Password input:>", client)
+        hidden = tp.hidden_input("Enter Hidden input:>", client)
+        tp.printt(f"Normal input:{user_input} Password input:{password} Hidden input:{hidden}", client)
     txt("Test", client)
 
+    # Remote Commands test
     tp.inputt("Press enter!", client)
     tp.cls(client)
     tp.system_command("curl wttr.in", client)
     tp.inputt("Press enter!", client)
 
+    # Colour text test
     tp.cls(client)
-    colours = ["black", "grey", "red", "green", "yellow", "blue", "magenta", "cyan",
-               "light_grey", "dark_grey", "light_red", "light_green", "light_yellow",
-               "light_blue", "light_magenta", "light_cyan", "white"]
+    colours = ["black", "red", "green", "yellow", "blue", "magenta", "cyan",
+               "light_red", "light_green", "light_yellow",
+               "light_blue", "light_magenta", "light_cyan", "white"]  # compatible colours
 
-    for colour in colours:
-        tp.printc("Telepy 2024", colour, client)
+    for bg_colour in colours:
+        for colour in colours:
+            colour_data = [colour, bg_colour]
+            tp.printc(f"Telepy 2024 (Foreground colour {colour}, Background colour {bg_colour} )", colour_data, client)
+
+    # 2d array test
+    tp.inputt("Press enter!", client)
+    tp.cls(client)
+
+    screen = screen_generate(10,10,"@")
+
+    tp.print2d(screen, client)
+
+    tp.inputt("Press enter!", client)
+
+
+
+
 
 
     tp.closet(log_file,f"Disconnected by user!", client, add)

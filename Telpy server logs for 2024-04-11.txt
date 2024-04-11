@@ -1,0 +1,49 @@
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 21:53:01.584709
+('127.0.0.1', 64938) has connected to server at 2024-04-11 21:53:15.189314
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 21:53:27.977977
+('127.0.0.1', 64942) has connected to server at 2024-04-11 21:53:45.575623
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 21:55:15.363134
+('127.0.0.1', 64948) has connected to server at 2024-04-11 21:55:21.456879
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 21:56:34.221345
+('127.0.0.1', 64959) has connected to server at 2024-04-11 21:56:41.388708
+('127.0.0.1', 64959) has disconnected from the server at 2024-04-11 21:56:44.954584
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 21:57:18.066474
+('127.0.0.1', 64969) has connected to server at 2024-04-11 21:57:25.247740
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 21:58:49.059671
+('127.0.0.1', 64985) has connected to server at 2024-04-11 21:58:55.529315
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 22:00:21.192897
+('127.0.0.1', 64995) has connected to server at 2024-04-11 22:00:35.091500
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 22:01:15.250846
+('127.0.0.1', 65003) has connected to server at 2024-04-11 22:01:21.663647
+('127.0.0.1', 65003) has disconnected from the server at 2024-04-11 22:01:40.957310
+('127.0.0.1', 65005) has connected to server at 2024-04-11 22:01:43.404018
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 22:06:45.267279
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 22:06:51.126098
+('127.0.0.1', 65063) has connected to server at 2024-04-11 22:07:01.312052
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 22:07:43.646347
+('127.0.0.1', 65069) has connected to server at 2024-04-11 22:07:50.958045
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2024-04-11 22:09:05.757347
+('127.0.0.1', 65081) has connected to server at 2024-04-11 22:09:13.050178
+('127.0.0.1', 65081) has disconnected from the server at 2024-04-11 22:13:45.343299
+('127.0.0.1', 65183) has connected to server at 2024-04-11 22:13:48.550109
+('127.0.0.1', 65183) has disconnected from the server at 2024-04-11 22:13:53.207801
+('127.0.0.1', 65236) has connected to server at 2024-04-11 22:18:16.299171
+('127.0.0.1', 65236) has disconnected from the server at 2024-04-11 22:18:21.131001
+('192.168.1.241', 45658) has connected to server at 2024-04-11 22:21:23.940740
+('192.168.1.241', 45658) has disconnected from the server at 2024-04-11 22:21:35.854368
+('192.168.1.241', 46010) has connected to server at 2024-04-11 22:21:47.857923
+('192.168.1.241', 46010) has disconnected from the server at 2024-04-11 22:22:05.368948
+('192.168.1.241', 46540) has connected to server at 2024-04-11 22:22:24.286376
+('192.168.1.241', 46540) has disconnected from the server at 2024-04-11 22:22:40.063831

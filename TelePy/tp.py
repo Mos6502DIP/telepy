@@ -1,7 +1,7 @@
-import errno
 import socket
 import datetime
 import time
+import json
 
 buffer = 0
 
@@ -189,16 +189,21 @@ def hidden_input(string, client):
 
 
 def printc(string, color, client):
-    colours = ["black", "grey", "red", "green", "yellow", "blue", "magenta", "cyan", "light_grey", "dark_grey", "light_red", "light_green", "light_yellow", "light_blue", "light_magenta", "light_cyan", "white"]
+    colours = ["black", "red", "green", "yellow", "blue", "magenta", "cyan",
+               "light_red", "light_green", "light_yellow",
+               "light_blue", "light_magenta", "light_cyan", "white"]  # compatible colours
 
     try:
         time.sleep(buffer)
-        if color in colours:
-            client.send(bytes(f"9|{color}|{string}", "utf-8"))
+        if len(color) == 1:
+            color.append("black")
+        if color[0] in colours:
+            if color[1] in colours:
+                client.send(bytes(f"9|{json.dumps(color)}|{string}", "utf-8"))
 
         else:
             print("Error: Invalid colour")
-            client.send(bytes(f"9|white|{string}", "utf-8"))
+            client.send(bytes(f"9|{['white']}|{string}", "utf-8"))
 
 
         acknowledgment = client.recv(1024).decode()
@@ -208,3 +213,40 @@ def printc(string, color, client):
     except socket.error as e:
         if e.errno != 10038 and e.errno != 10054:
             print(f"Socket error: {e}")
+
+
+def print2d(array, client):
+
+
+    try:
+        time.sleep(buffer)
+
+        client.send(bytes(f"10|{json.dumps(array)}", "utf-8"))
+
+        acknowledgment = client.recv(1024).decode()
+        if acknowledgment != "ACK":
+            print("Error: Client did not acknowledge the message.")
+
+    except socket.error as e:
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
+
+
+def print2dc(array, client):
+
+
+    try:
+        time.sleep(buffer)
+
+        client.send(bytes(f"11|{json.dumps(array)}", "utf-8"))
+
+        acknowledgment = client.recv(1024).decode()
+        if acknowledgment != "ACK":
+            print("Error: Client did not acknowledge the message.")
+
+    except socket.error as e:
+        if e.errno != 10038 and e.errno != 10054:
+            print(f"Socket error: {e}")
+
+
+
