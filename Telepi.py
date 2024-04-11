@@ -8,7 +8,7 @@ import json
 
 
 
-ver = "1.2.3"
+ver = "1.3.0"
 
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -136,6 +136,15 @@ def dum_ter(server, cSct):
                          for row in screen]))
         return None
 
+    elif server_m == "11":
+        screen = json.loads(data)
+        for row in screen:
+            for item in row:
+                char, fg_color, bg_color = item
+                # Print the character with the specified foreground and background colors
+                print(colour(char, fg_color, bg_color), end="")
+            print()  # Move to the next line after printing each row
+        return None
 
     else:
         print("Out dated client")

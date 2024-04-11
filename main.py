@@ -29,7 +29,7 @@ def screen_generate_colour(colours, char):
         mem.append([])
 
         for j in range(len(colours)):
-            character = [char, [colours[j], colours[i]]]
+            character = [char, colours[j], colours[i]]
             mem[i].append(character)
 
 
@@ -103,6 +103,16 @@ def clientside(client, add):
     tp.print2d(screen, client)
 
     tp.inputt("Press enter!", client)
+
+    tp.cls(client)
+
+    screen = screen_generate_colour(colours, "@")
+
+    tp.print2dc(screen, client)
+
+    tp.inputt("Press enter!", client)
+
+
 
 
 

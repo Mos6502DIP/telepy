@@ -5,7 +5,7 @@ import os
 from getpass import getpass
 from termcolor import colored
 
-ver = "1.2.3"
+ver = "1.3.0"
 
 
 def hash_string(password):
@@ -139,6 +139,17 @@ def  dum_ter(server, cSct):
                              for row in screen]))
             return None
 
+        case "11":
+
+            screen = json.loads(data)
+            for row in screen:
+                for item in row:
+                    char, fg_color, bg_color = item
+                    # Print the character with the specified foreground and background colors
+                    print(colour(char, fg_color, bg_color), end="")
+                print()  # Move to the next line after printing each row
+            return None
+
         case _:
             print("Out dated client")
             return None
@@ -212,7 +223,7 @@ P'   MM   `7      MM                MM   `MM.
 
         while True:
 
-            server_rev = Sct.recv(1024).decode()
+            server_rev = Sct.recv(6000).decode()
 
             Sct.send("ACK".encode())
             if dum_ter(server_rev.split("|"), Sct) is not None:
