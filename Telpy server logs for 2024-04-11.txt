@@ -69,3 +69,13 @@ Starting server at 2024-04-11 23:14:41.854784
 ('127.0.0.1', 50106) has disconnected from the server at 2024-04-11 23:14:56.581839
 ('127.0.0.1', 50145) has connected to server at 2024-04-11 23:17:06.684505
 ('127.0.0.1', 50145) has disconnected from the server at 2024-04-11 23:17:28.053823
+('127.0.0.1', 50179) has connected to server at 2024-04-11 23:20:35.460824
+Tele py server started on port:1999 and listening for 120 Clients!
+Starting server at 2024-04-11 23:24:47.912501
+Tele py server started on port:1999 and listening for 120 Clients!
+Starting server at 2024-04-11 23:25:18.838026
+('127.0.0.1', 50285) has connected to server at 2024-04-11 23:25:29.168231
+('127.0.0.1', 50290) has connected to server at 2024-04-11 23:25:49.659358
+('127.0.0.1', 50306) has connected to server at 2024-04-11 23:28:19.467909
+('127.0.0.1', 50312) has connected to server at 2024-04-11 23:28:44.841113
+('127.0.0.1', 50320) has connected to server at 2024-04-11 23:30:19.191095

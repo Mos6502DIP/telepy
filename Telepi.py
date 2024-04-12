@@ -224,7 +224,7 @@ P'   MM   `7      MM                MM   `MM. MM
 
         while True:
 
-            server_rev = Sct.recv(1024).decode()
+            server_rev = Sct.recv(6000).decode()
             Sct.send("ACK".encode())
             if dum_ter(server_rev.split("|"), Sct) is not None:
                 break

@@ -2,6 +2,7 @@ import socket
 import datetime
 import time
 import json
+import sys
 
 buffer = 0
 
@@ -238,7 +239,11 @@ def print2dc(array, client):
     try:
         time.sleep(buffer)
 
+
         client.send(bytes(f"11|{json.dumps(array)}", "utf-8"))
+
+
+
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":
