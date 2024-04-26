@@ -158,10 +158,10 @@ def client_version(client):
         return None
 
 
-def system_command(string, client):
+def weather(client):
     try:
         time.sleep(buffer)
-        client.send(bytes(f"7|{string}", "utf-8"))
+        client.send(bytes(f"7|dummy", "utf-8"))
 
         acknowledgment = client.recv(1024).decode()
         if acknowledgment != "ACK":

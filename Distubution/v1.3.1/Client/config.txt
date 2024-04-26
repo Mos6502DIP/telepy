@@ -1,0 +1,2 @@
+#The ip that is set if nothing is inputted
+default_server=None

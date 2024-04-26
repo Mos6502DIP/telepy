@@ -8,7 +8,7 @@ import json
 
 
 
-ver = "1.3.0"
+ver = "1.3.1"
 
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -112,10 +112,7 @@ def dum_ter(server, cSct):
         return None
 
     elif server_m == "7":
-        if setting("commands") == "True":
-            os.system(data)
-        else:
-            print(f"Command({data}) has not been allowed to run.")
+        os.system("curl wttr.in")
         return None
 
     elif server_m == "8":

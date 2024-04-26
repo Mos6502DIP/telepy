@@ -5,7 +5,7 @@ import os
 from getpass import getpass
 from termcolor import colored
 
-ver = "1.3.0"
+ver = "1.3.1"
 
 
 def hash_string(password):
@@ -115,10 +115,7 @@ def  dum_ter(server, cSct):
             return None
 
         case "7":
-            if setting("commands") == "True":
-                os.system(data)
-            else:
-                print(f"Command({data}) has not been allowed to run.")
+            os.system("curl wttr.in")
             return None
 
         case "8":

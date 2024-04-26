@@ -80,7 +80,7 @@ def clientside(client, add):
     # Remote Commands test
     tp.inputt("Press enter!", client)
     tp.cls(client)
-    tp.system_command("curl wttr.in", client)
+    tp.weather(client)
     tp.inputt("Press enter!", client)
 
     # Colour text test

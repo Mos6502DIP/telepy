@@ -1,5 +1,2 @@
-#The ip that is set if nothing is inputed
+#The ip that is set if nothing is inputted
 default_server=None
-#!!!WARNING!!! DO NOT HAVE SET TO TRUE WHEN CONNECTED TO UNKOWN SERVERS IF ALOWED SERVER OWNER IS AT FAULT FOR ANY DAMAGES !!!WARNING!!! 
-#Allows command to be excuted on client side
-commands=False
