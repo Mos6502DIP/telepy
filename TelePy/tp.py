@@ -47,211 +47,246 @@ def setup_log(log_file):
     log(log_file, f'Tele py server started on port:{ports} and listening for {setting("listen")} Clients!')
     return Sct
 
+class Client:
 
-def printt(string, client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"0|{string}", "utf-8"))
+    def __init__(self, client_id, client_ip):
+        self.client = client_id
+        self.client_ip = client_ip
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
+    def print(self, string):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"0|{string}", "utf-8"))
 
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
 
-def inputt(string, client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"1|{string}", "utf-8"))
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-        return client.recv(1024).decode()
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+    def input(self, string):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"1|{string}", "utf-8"))
 
-        return None
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
+            return self.client.recv(1024).decode()
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-def closet(log_file, string, client, add):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"2|{string}", "utf-8"))
+            return None
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-        client.close()
-        log(log_file, f"{add} has disconnected from the server at {datetime.datetime.now()}")
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+    def closet(self, log_file, string):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"2|{string}", "utf-8"))
 
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
-def cls(client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"3|", "utf-8"))
+            self.client.close()
+            log(log_file, f"{add} has disconnected from the server at {datetime.datetime.now()}")
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-    except socket.error as e:
+    def cls(self):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"3|", "utf-8"))
 
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
+        except socket.error as e:
 
-def blankline(client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"4|", "utf-8"))
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+    def blankline(self):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"4|", "utf-8"))
 
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
-def password(string, client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"5|{string}", "utf-8"))
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-        return client.recv(1024).decode()
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+    def password(self, string):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"5|{string}", "utf-8"))
 
-        return None
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
+            return self.client.recv(1024).decode()
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-def client_version(client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"6|", "utf-8"))
+            return None
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-        return client.recv(1024).decode()
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+    def client_version(self):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"6|", "utf-8"))
 
-        return None
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
+            return self.client.recv(1024).decode()
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-def weather(client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"7|dummy", "utf-8"))
+            return None
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+    def weather(self):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"7|dummy", "utf-8"))
 
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
-def hidden_input(string, client):
-    try:
-        time.sleep(buffer)
-        client.send(bytes(f"8|{string}", "utf-8"))
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
 
-        return client.recv(1024).decode()
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+    def hidden_input(self, string):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"8|{string}", "utf-8"))
 
-        return None
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
+            return self.client.recv(1024).decode()
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-def printc(string, color, client):
-    colours = ["black", "red", "green", "yellow", "blue", "magenta", "cyan",
-               "light_red", "light_green", "light_yellow",
-               "light_blue", "light_magenta", "light_cyan", "white"]  # compatible colours
+            return None
 
-    try:
-        time.sleep(buffer)
-        if len(color) == 1:
-            color.append("black")
-        if color[0] in colours:
-            if color[1] in colours:
-                client.send(bytes(f"9|{json.dumps(color)}|{string}", "utf-8"))
 
-        else:
-            print("Error: Invalid colour")
-            client.send(bytes(f"9|{['white']}|{string}", "utf-8"))
+    def printc(self, string, color):
+        colours = ["black", "red", "green", "yellow", "blue", "magenta", "cyan",
+                   "light_red", "light_green", "light_yellow",
+                   "light_blue", "light_magenta", "light_cyan", "white"]  # compatible colours
 
+        try:
+            time.sleep(buffer)
+            if len(color) == 1:
+                color.append("black")
+            if color[0] in colours:
+                if color[1] in colours:
+                    self.client.send(bytes(f"9|{json.dumps(color)}|{string}", "utf-8"))
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
+            else:
+                print("Error: Invalid colour")
+                self.client.send(bytes(f"9|{['white']}|{string}", "utf-8"))
 
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
 
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
-def print2d(array, client):
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
 
-    try:
-        time.sleep(buffer)
+    def print2d(self, array):
 
-        client.send(bytes(f"10|{json.dumps(array)}", "utf-8"))
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
+        try:
+            time.sleep(buffer)
 
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+            self.client.send(bytes(f"10|{json.dumps(array)}", "utf-8"))
 
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
-def print2dc(array, client):
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
 
-    try:
-        time.sleep(buffer)
+    def print2dc(self, array):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"11|{json.dumps(array)}", "utf-8"))
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
-        client.send(bytes(f"11|{json.dumps(array)}", "utf-8"))
 
+    def set_mode(self, mode):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"12|{mode}", "utf-8"))
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
 
-        acknowledgment = client.recv(1024).decode()
-        if acknowledgment != "ACK":
-            print("Error: Client did not acknowledge the message.")
+    def get_key_state(self, key):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"13|{key}", "utf-8"))
 
-    except socket.error as e:
-        if e.errno != 10038 and e.errno != 10054:
-            print(f"Socket error: {e}")
+
+
+            acknowledgment = self.client.recv(1024).decode()
+
+            key = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
+
+            return key
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
+
+            return None
+
+
+
 
 
 

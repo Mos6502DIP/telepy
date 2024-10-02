@@ -2,4 +2,4 @@
 default_server=None
 #!!!WARNING!!! DO NOT HAVE SET TO TRUE WHEN CONNECTED TO UNKOWN SERVERS IF ALOWED SERVER OWNER IS AT FAULT FOR ANY DAMAGES !!!WARNING!!! 
 #Allows command to be excuted on client side
-commands=False
+commands=True

@@ -3,10 +3,11 @@ import json
 import socket
 import os
 from getpass import getpass
-from termcolor import colored
+import keyboard as kb
 
-ver = "1.3.1"
+ver = "1.5"
 
+message = ""
 
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -72,6 +73,7 @@ def colour(text, color, background=None):
     return f"{background_code}{color_code}{text}{colors['reset']}"
 
 def  dum_ter(server, cSct):
+    global message
 
     server_m = server[0]  # the first digit is the mode set by the server.
 
@@ -90,9 +92,8 @@ def  dum_ter(server, cSct):
             return None
 
         case "2":
-            print(data)
+            message = data
             cSct.close()
-            input("Press enter to return to prompt!")
             return "exit"
 
         case "3":
@@ -147,14 +148,23 @@ def  dum_ter(server, cSct):
                 print()  # Move to the next line after printing each row
             return None
 
+        case "13":
+
+            is_key = kb.is_pressed(data)
+
+            cSct.send(bytes(str(is_key), "utf-8"))
+            return None
+
         case _:
             print("Out dated client")
             return None
+
 
 os.system("cls")
 while True:
 
     while True:
+        os.system("cls")
         print('''                                                      
                   ,,                                    
 MMP""MM""YMM    `7MM              `7MM"""Mq.            
@@ -167,7 +177,10 @@ P'   MM   `7      MM                MM   `MM.
                                                 ,V      
                                              OOb"       
         ''')
-        print(colour("Telepi", "green"), "by", colour("Peter Cakebread", "blue"), f" 2024 v{ver}")
+        print(colour("Telepy", "green"), "by", colour("Peter Cakebread", "blue"), f" 2024 v{ver}")
+        if message != "":
+            print(message)
+            message = ""
         ip = input("Server ip:>")
         port = 1998
         server = ip.split(":")
@@ -186,10 +199,13 @@ P'   MM   `7      MM                MM   `MM.
                     break
                 break
             else:
-                print("No default server specified config")
+                message = "No default server specified config"
+
+        elif ip == "help":
+            message = "Different port other than 1998 use (:), @ for localhost. Also Esc to stop and disconnect server"
 
         elif ip[len(ip) - 1] == ':':
-            print("Port not specified")
+            message = "Port not specified"
 
         elif len(server) == 2:
 
@@ -211,20 +227,32 @@ P'   MM   `7      MM                MM   `MM.
             exit(1)
 
 
-        else:
-            break
+        else:6
 
     try:
+
+        mode = 0
+
         Sct = socket.socket()  # creating the socket
         Sct.connect((ip, port))  # connecting to the server
 
         while True:
 
+
+
             server_rev = Sct.recv(6000).decode()
 
-            Sct.send("ACK".encode())
-            if dum_ter(server_rev.split("|"), Sct) is not None:
+            if kb.is_pressed("ESC"):
+                message = "Disconnected by User"
                 break
+
+            Sct.send("ACK".encode())
+
+            if dum_ter(server_rev.split("|"),Sct) is not None:
+                break
+
+
+
         os.system("cls")
     except socket.error as e:
         print(f"Socket error: {e}")
