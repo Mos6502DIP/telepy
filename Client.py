@@ -6,8 +6,10 @@ from getpass import getpass
 import keyboard as kb
 
 ver = "1.5"
+device = "win"
 
 message = ""
+
 
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -112,7 +114,8 @@ def  dum_ter(server, cSct):
             return None
 
         case "6":
-            cSct.send(bytes(str(ver), "utf-8"))
+            send = [ver, device]
+            cSct.send(bytes(str(json.dumps(send)), "utf-8"))
             return None
 
         case "7":

@@ -70,7 +70,7 @@ def clientside(client):
     client.cls()
     c_version = client.client_version()
     client.print("Print test!")
-    client.print(f"Client version {c_version}" )
+    client.print(f"Device Info {c_version}" )
     if tp.setting("telepi_debug") != "True":
         user_input = client.input("Enter Normal input:>")
         password = client.password("Enter Password input:>")

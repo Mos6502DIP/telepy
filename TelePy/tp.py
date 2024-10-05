@@ -95,7 +95,7 @@ class Client:
                 print("Error: Client did not acknowledge the message.")
 
             self.client.close()
-            log(log_file, f"{add} has disconnected from the server at {datetime.datetime.now()}")
+            log(log_file, f"{self.client_ip} has disconnected from the server at {datetime.datetime.now()}")
         except socket.error as e:
             if e.errno != 10038 and e.errno != 10054:
                 print(f"Socket error: {e}")
@@ -156,7 +156,8 @@ class Client:
             if acknowledgment != "ACK":
                 print("Error: Client did not acknowledge the message.")
 
-            return self.client.recv(1024).decode()
+            device = json.loads(self.client.recv(1024).decode())
+            return device
         except socket.error as e:
             if e.errno != 10038 and e.errno != 10054:
                 print(f"Socket error: {e}")
