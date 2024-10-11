@@ -3,7 +3,14 @@
  
 
 ## Contents
-
+<!-- TOC -->
+* [Telepy](#telepy)
+  * [Contents](#contents)
+* [Client](#client)
+  * [setup](#setup)
+  * [Connecting to a server](#connecting-to-a-server)
+  * [Config](#config)
+<!-- TOC -->
 
 # Client
 ## setup
@@ -15,4 +22,4 @@ To connect the server just enter the ip or the domain by default servers rn on p
 
 ## Config
 
-As previously mentioned there is a file called `config.txt` that will contain the configuration for the client. They are currently in the format of `setting=option` with `#` being used for comments.
+As previously mentioned there is a file called `config.txt` that will contain the configuration for the client. They are currently in the format of `setting=option` with `#` being used for comments. In the client and you press enter with no IP/Domain it will use the default domain which is specified in this file.
