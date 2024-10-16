@@ -37,6 +37,6 @@ To start a server go to the server folder of the release zip. There is a directo
 
 ## Server Structure
 
-The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project.Import the library with `import tp from Telepy as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that simply abide to the syntax.
+The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project.Import the library with `import Telepy from tp as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that simply abide to the syntax.
 
 
