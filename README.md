@@ -25,18 +25,18 @@ To connect the server just enter the ip or the domain by default servers rn on p
 
 ## Config
 
-As previously mentioned there is a file called `config.txt` that will contain the configuration for the client. They are currently in the format of `setting=option` with `#` being used for comments. In the client and you press enter with no IP/Domain it will use the default domain which is specified in this file as `default_server`.
+As previously mentioned there is a file called `config.txt` that will contain the configuration for the client. They are currently in the format of `setting=option` with `#` being used for comments. In the client when you press enter with no IP/Domain it will use the default domain which is specified in this file as `default_server`.
 
 # Server
 
-! Warning this documentation may not represent the current version as this was made for 1.5 which is to be released as of making this document  !
+! Warning this documentation may not represent the current version as this was made for 1.5 which is to be released as of making this document !
 
 ## Setup
 
-To start a server goto the server folder of the release zip. In there is a directory called `TelePy` and in there should a file called `tp.py` this is where the library is. To run the server simply run the `main.py` in the server directory.
+To start a server go to the server folder of the release zip. There is a directory called `TelePy` and there should be a file called `tp.py` this is where the library is. To run the server simply run the `main.py` in the server directory.
 
 ## Server Structure
 
-The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection ip address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that simple abide to the syntax.
+The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project.Import the library with `from Telepy import tp as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that simply abide to the syntax.
 
 
