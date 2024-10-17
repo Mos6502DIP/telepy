@@ -29,6 +29,10 @@ def setting(setting:str):
         print("No config.txt")
 
 
+def settings():
+    return "under development"
+    
+
 def colour(text, color, background=None):
     colors = {
         "black": "\033[30m",
@@ -114,8 +118,8 @@ def  dum_ter(server, cSct):
             return None
 
         case "6":
-            send = [ver, device]
-            cSct.send(bytes(str(json.dumps(send)), "utf-8"))
+
+            cSct.send(bytes(str(ver), "utf-8"))
             return None
 
         case "7":
@@ -158,6 +162,16 @@ def  dum_ter(server, cSct):
             cSct.send(bytes(str(is_key), "utf-8"))
             return None
 
+        case "14":
+
+            cSct.send(bytes(str(device), "utf-8"))
+            return None
+
+        case "15":
+            message = data
+            cSct.close()
+            return "exit"
+
         case _:
             print("Out dated client")
             return None
@@ -180,7 +194,7 @@ P'   MM   `7      MM                MM   `MM.
                                                 ,V      
                                              OOb"       
         ''')
-        print(colour("Telepy", "green"), "by", colour("Peter Cakebread", "blue"), f" 2024 v{ver}")
+        print(colour("Telepy", "green"), "by", colour("Peter Cakebread", "blue"), f" 2024 v{ver} ({device})")
         if message != "":
             print(message)
             message = ""
@@ -205,7 +219,14 @@ P'   MM   `7      MM                MM   `MM.
                 message = "No default server specified config"
 
         elif ip == "help":
-            message = "Different port other than 1998 use (:), @ for localhost. Also Esc to stop and disconnect server"
+            message = """Different port other than 1998 use (:), 
+            @ for localhost. Also Esc to stop and disconnect server.,
+            Setting to easily change config
+            Credit to igor_chubin for weather.
+            """
+
+        elif ip == "settings":
+            messgae = settings()
 
         elif ip[len(ip) - 1] == ':':
             message = "Port not specified"

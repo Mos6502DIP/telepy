@@ -69,8 +69,10 @@ def clientside(client):
     # Basic functions test
     client.cls()
     c_version = client.client_version()
+    d_version = client.device()
     client.print("Print test!")
-    client.print(f"Device Info {c_version}" )
+    client.print(f"Version: {c_version}")
+    client.print(f"Device Info {d_version}" )
     if tp.setting("telepi_debug") != "True":
         user_input = client.input("Enter Normal input:>")
         password = client.password("Enter Password input:>")
@@ -110,7 +112,7 @@ def clientside(client):
 
     client.input("Press Enter to continue...")
 
-    client.closet(log_file,f"Disconnected by user!")
+    client.closet_log (log_file,f"Disconnected by user!")
 
 
 

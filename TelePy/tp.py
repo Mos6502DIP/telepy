@@ -85,7 +85,7 @@ class Client:
             return None
 
 
-    def closet(self, log_file, string):
+    def closet_log(self, log_file, string):
         try:
             time.sleep(buffer)
             self.client.send(bytes(f"2|{string}", "utf-8"))
@@ -156,7 +156,7 @@ class Client:
             if acknowledgment != "ACK":
                 print("Error: Client did not acknowledge the message.")
 
-            device = json.loads(self.client.recv(1024).decode())
+            device = self.client.recv(1024).decode()
             return device
         except socket.error as e:
             if e.errno != 10038 and e.errno != 10054:
@@ -286,6 +286,37 @@ class Client:
 
             return None
 
+    def device(self):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"14|", "utf-8"))
+
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
+
+            device = self.client.recv(1024).decode()
+            return device
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
+
+            return None
+
+    def closet(self, string):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"15|{string}", "utf-8"))
+
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
+
+            self.client.close()
+            print(f"{self.client_ip} has disconnected from the server at {datetime.datetime.now()}")
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
 
 
 
