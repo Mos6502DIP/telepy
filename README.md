@@ -25,6 +25,10 @@
     * [Device](#device)
     * [Weather](#weather)
     * [Printc](#printc)
+    * [Print2d](#print2d)
+    * [Print2dc](#print2dc)
+    * [Closet](#closet)
+    * [Closet_log](#closet_log)
 <!-- TOC -->
 
 # Client
@@ -49,15 +53,15 @@ To start a server go to the server folder of the release zip. There is a directo
 
 ## Server Structure
 
-The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project.Import the library with `from Telepy import tp as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that simply abide to the syntax.
+The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project. Import the library with `from Telepy import tp as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that abide by the syntax.
 
 ## Syntax
 
-Here is the documentation of the syntax for telepy all examples with have `client` as the client object and use `from Telepy import tp as tp`
+Here is the documentation of the syntax for telepy all examples have `client` as the client object and use `from Telepy import tp as tp`
 
 ### Log
 
-This is a function built in to telepy to make loging easier just to use `tp.log('exsample.txt', 'Hello world!')` the log file or directory should be in the same directory as your server script.
+This is a function built into telepy to make logging easier just use `tp.log('exsample.txt', 'Hello world!')` the log file or directory should be in the same directory as your server script.
 
 ### Setup
 
@@ -93,9 +97,25 @@ This work simular to `Client_version` but will return a string of the version of
 
 ### Weather
 
-This function will display weather information by running `curl wttr.in` on the client it would also add on the client's location if they have specified it in `config.txt`.
+This function will display weather information by running `curl wttr.in` on the client it would also add on the client's location if they have specified it in their `config.txt`.
 
 ### Printc
 
 This function will print colour text by specifying a foreground colour and a background colour in an array in that order like this `colour_data = ['green', 'black']` then `client.printc('Hello world', colour_data)`. Compatible colours are `'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'light_red', 'light_green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan', 'white'`.
+
+### Print2d
+
+This function will print a 2d array on the client end. `client.print2d(screen)` The array should be in the format of an array with each line a sub array.
+
+### Print2dc
+
+This function works in the same format but requires colour information. `client.print2dc(screen)` The array should contain a sub-array of each line and each character should display another subarray with colour information eg `[['@', 'red', 'black'], ['@', 'green', 'black'], ['@', 'blue', 'black']]` that would be one line of the array the colour is limited to the same set as `printc`.
+
+### Closet
+
+This is a function to close the client and give a message to display when disconnected. `client.closet("Disconnected from server.")` As a good rule make sure the disconnect message is helpful and informative.
+
+### Closet_log
+
+This is a function functions the same as `Closet` but logs the disconnect to a file. `client.closet('example.txt', "Disconnected from server.")`
 
