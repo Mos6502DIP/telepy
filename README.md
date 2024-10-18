@@ -13,6 +13,18 @@
 * [Server](#server)
   * [Setup](#setup-1)
   * [Server Structure](#server-structure)
+  * [Syntax](#syntax)
+    * [Log](#log)
+    * [Setup](#setup-2)
+    * [Print](#print)
+    * [Cls](#cls)
+    * [Input](#input)
+    * [Hidden_input](#hidden_input)
+    * [Password](#password)
+    * [Client_version](#client_version)
+    * [Device](#device)
+    * [Weather](#weather)
+    * [Printc](#printc)
 <!-- TOC -->
 
 # Client
@@ -41,11 +53,11 @@ The structure of the `main.py` is recommended but also advised to modify/expand 
 
 ## Syntax
 
-Here is the documentation of the syntax for Telepy all examples have `client` as the client object and use `from Telepy import tp as tp`
+Here is the documentation of the syntax for telepy all examples with have `client` as the client object and use `from Telepy import tp as tp`
 
 ### Log
 
-This is a function built into telepy to make logging easier just use `tp.log('exsample.txt', 'Hello world!')` the log file or directory should be in the same directory as your server script.
+This is a function built in to telepy to make loging easier just to use `tp.log('exsample.txt', 'Hello world!')` the log file or directory should be in the same directory as your server script.
 
 ### Setup
 
@@ -65,11 +77,11 @@ This function will give a client a prompt and then return the string they enter.
 
 ### Hidden_input
 
-This function will give a client a prompt then it will hide the input when the user enters it in the client, then return the string they enter. `hidden_input = client.hidden_input("Prompt :>")`
+This function will give a client a prompt then it will hide the input when the user enters it in the client, then return the string they enter. `hidden_input = client.hidden_input('Prompt :>')`
 
 ### Password
 
-This function will give a client a prompt then it will hide the input when the user enters it in the client, then return a hashed string of what they entered. `password = client.password("Enter Password input:>")`
+This function will give a client a prompt then it will hide the input when the user enters it in the client, then return a hashed string of what they entered. `password = client.password('Enter Password input:>')`
 
 ### Client_version
 
@@ -77,8 +89,13 @@ This function is great for ensuring compatibility with the client the function w
 
 ### Device
 
-This work is simular to `Client_version` but will return a string of the version of the client eg `win, web, lin, crt`. `device = client.device()`.`win` is a windows based client, `web` is a website based client, `lin` is a Linux based client and `crt` is a Linux based client but has a smaller screen size and wraps text differently.
+This work simular to `Client_version` but will return a string of the version of the client eg `win, web, lin, crt`. `device = client.device()`.`win` is a windows based client, `web` is a website based client, `lin` is a linux based client and `crt` is a linux based client but has a smaller screen size and wraps text differently.
 
 ### Weather
 
-This function will display weather information by running `curl wttr.in`
+This function will display weather information by running `curl wttr.in` on the client it would also add on the client's location if they have specified it in `config.txt`.
+
+### Printc
+
+This function will print colour text by specifying a foreground colour and a background colour in an array in that order like this `colour_data = ['green', 'black']` then `client.printc('Hello world', colour_data)`. Compatible colours are `'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'light_red', 'light_green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan', 'white'`.
+
