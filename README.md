@@ -39,4 +39,46 @@ To start a server go to the server folder of the release zip. There is a directo
 
 The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project.Import the library with `from Telepy import tp as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that simply abide to the syntax.
 
+## Syntax
 
+Here is the documentation of the syntax for Telepy all examples have `client` as the client object and use `from Telepy import tp as tp`
+
+### Log
+
+This is a function built into telepy to make logging easier just use `tp.log('exsample.txt', 'Hello world!')` the log file or directory should be in the same directory as your server script.
+
+### Setup
+
+This function creates the socket that the server will run on based on the `server_config.txt` e.g. `tp.setup()` or `tp.setup_log('exsample.txt')` to log the output it gives.
+
+### Print
+
+This is the simplest function and just prints plain text `client.print('Hello world')`
+
+### Cls
+
+This function will clear the client terminal. `client.cls()`
+
+### Input
+
+This function will give a client a prompt and then return the string they enter. `user_input = client.input('Prompt :>')`
+
+### Hidden_input
+
+This function will give a client a prompt then it will hide the input when the user enters it in the client, then return the string they enter. `hidden_input = client.hidden_input("Prompt :>")`
+
+### Password
+
+This function will give a client a prompt then it will hide the input when the user enters it in the client, then return a hashed string of what they entered. `password = client.password("Enter Password input:>")`
+
+### Client_version
+
+This function is great for ensuring compatibility with the client the function will return a string which is the client version. `client_version = client.client_version()`
+
+### Device
+
+This work is simular to `Client_version` but will return a string of the version of the client eg `win, web, lin, crt`. `device = client.device()`.`win` is a windows based client, `web` is a website based client, `lin` is a Linux based client and `crt` is a Linux based client but has a smaller screen size and wraps text differently.
+
+### Weather
+
+This function will display weather information by running `curl wttr.in`
