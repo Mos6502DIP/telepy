@@ -1,6 +1,6 @@
 # Telepy
- Telepy is a recreation of a teletype terminal interface using TCP this project has been going on for almost 3 years. It features encrypted inputs, colour text, colour 2d arrays and more. The project features a complied exe client, a version for Linux, and server tools. If  you want a server, try going to 'server.fractaldev.co' where Telepy-connect is running. This is also a project running alongside this not the only use for this project you can use it for server monitoring, making an online version of the cli python project and more. 
- 
+ Telepy is a recreation of a teletype terminal interface using TCP this project has been going on for almost 3 years. It features encrypted inputs, colour text, colour 2d arrays and more. The project features a complied exe client, a version for Linux, and server tools. If  you want a server, try going to 'server.fractaldev.co' where Telepy-connect is running. This is also a project running alongside this not the only use for this project you can use it for server monitoring, making an online version of the cli python project and more.
+ ![](thumbnail.png "Telepy")
 
 ## Contents
 <!-- TOC -->
@@ -119,3 +119,6 @@ This is a function to close the client and give a message to display when discon
 
 This is a function functions the same as `Closet` but logs the disconnect to a file. `client.closet('example.txt', "Disconnected from server.")`
 
+## Server Config
+
+This specifies the configuration for the server in the file called `server_config.txt`
