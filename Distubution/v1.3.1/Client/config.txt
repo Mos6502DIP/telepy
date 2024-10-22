@@ -1,2 +1,2 @@
 #The ip that is set if nothing is inputted
-default_server=fractaldev.co
+default_server=server.fractaldev.co

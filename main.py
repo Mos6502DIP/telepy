@@ -101,18 +101,20 @@ def clientside(client):
 
     screen = screen_generate(10,10,"@")
 
+    print(screen)
+
     client.print2d(screen)
 
 
     client.print("Colour array test!")
 
     screen = screen_generate_colour(colours, "@")
-
+    print(screen)
     client.print2dc(screen)
 
     client.input("Press Enter to continue...")
 
-    client.closet_log (log_file,f"Disconnected by user!")
+    client.closet_log(log_file,f"Disconnected by user!")
 
 
 

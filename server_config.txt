@@ -1,3 +1,2 @@
 port=1998
 listen=120
-telepi_debug=False
