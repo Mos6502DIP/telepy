@@ -56,8 +56,6 @@ To start a server go to the server folder of the release zip. There is a directo
 The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project. Import the library with `from Telepy import tp as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that abide by the syntax.
 
 ## Syntax
-<<<<<<< Updated upstream
-=======
 
 Here is the documentation of the syntax for telepy all examples have `client` as the client object and use `from Telepy import tp as tp`
 
@@ -146,70 +144,22 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## 30 October - v1.5
 
 ### Revamped Syntax
->>>>>>> Stashed changes
 
-Here is the documentation of the syntax for telepy all examples have `client` as the client object and use `from Telepy import tp as tp`
+The syntax will be cleaner and easier to understand and clients have become objects Previous `tp.printt(f"Client version {c_version}", client)` Now looks like `client.print(f"Version: {c_version}")`.
 
-### Log
+### Cleaner server realise
 
-This is a function built into telepy to make logging easier just use `tp.log('exsample.txt', 'Hello world!')` the log file or directory should be in the same directory as your server script.
+This means the example server script only contains what is necessary. This was because of the unnecessary test script although show you how all the functions works now that is no longer required due to the updated `README`.
 
-### Setup
+### Client Settings
 
-This function creates the socket that the server will run on based on the `server_config.txt` e.g. `tp.setup()` or `tp.setup_log('exsample.txt')` to log the output it gives.
+In the Client there will feature to change setting within the client instead of editing the `config.txt` the file will also be in a json and also created automatically if the file is not already present. Also, the weather location can be configured in here this info can not be shared with servers.
 
-### Print
 
-This is the simplest function and just prints plain text `client.print('Hello world')`
 
-### Cls
+## v1.6
 
-This function will clear the client terminal. `client.cls()`
+### Automatic Updates
 
-### Input
+The client will automatically update and also able to revert to older versions. not older than 1.3.1 due to older version security risks.
 
-This function will give a client a prompt and then return the string they enter. `user_input = client.input('Prompt :>')`
-
-### Hidden_input
-
-This function will give a client a prompt then it will hide the input when the user enters it in the client, then return the string they enter. `hidden_input = client.hidden_input('Prompt :>')`
-
-### Password
-
-This function will give a client a prompt then it will hide the input when the user enters it in the client, then return a hashed string of what they entered. `password = client.password('Enter Password input:>')`
-
-### Client_version
-
-This function is great for ensuring compatibility with the client the function will return a string which is the client version. `client_version = client.client_version()`
-
-### Device
-
-This work simular to `Client_version` but will return a string of the version of the client eg `win, web, lin, crt`. `device = client.device()`.`win` is a windows based client, `web` is a website based client, `lin` is a linux based client and `crt` is a linux based client but has a smaller screen size and wraps text differently.
-
-### Weather
-
-This function will display weather information by running `curl wttr.in` on the client it would also add on the client's location if they have specified it in their `config.txt`.
-
-### Printc
-
-This function will print colour text by specifying a foreground colour and a background colour in an array in that order like this `colour_data = ['green', 'black']` then `client.printc('Hello world', colour_data)`. Compatible colours are `'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'light_red', 'light_green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan', 'white'`.
-
-### Print2d
-
-This function will print a 2d array on the client end. `client.print2d(screen)` The array should be in the format of an array with each line a sub array.
-
-### Print2dc
-
-This function works in the same format but requires colour information. `client.print2dc(screen)` The array should contain a sub-array of each line and each character should display another subarray with colour information eg `[['@', 'red', 'black'], ['@', 'green', 'black'], ['@', 'blue', 'black']]` that would be one line of the array the colour is limited to the same set as `printc`.
-
-### Closet
-
-This is a function to close the client and give a message to display when disconnected. `client.closet("Disconnected from server.")` As a good rule make sure the disconnect message is helpful and informative.
-
-### Closet_log
-
-This is a function functions the same as `Closet` but logs the disconnect to a file. `client.closet('example.txt', "Disconnected from server.")`
-
-## Server Config
-
-This specifies the configuration for the server in the file called `server_config.txt`
