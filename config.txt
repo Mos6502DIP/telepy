@@ -1,6 +1,1 @@
-#The ip that is set if nothing is inputted
-default_server=None
-#Location for weather (this can not be accessed by servers)
-location=None
-#MonoCrome mode (for crt old monitor)
-monochrome=False
+{"location": "norwich", "default_server": "server.fractaldev.co", "auto_return": false}

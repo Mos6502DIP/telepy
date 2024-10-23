@@ -10,26 +10,69 @@ device = "win"
 
 message = ""
 
+def setup():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("No config file detected")
+    print("""
+    88888888888          888          8888888b.
+        888              888          888   Y88b
+        888              888          888    888
+        888      .d88b.  888  .d88b.  888   d88P 888  888
+        888     d8P  Y8b 888 d8P  Y8b 8888888P"  888  888
+        888     88888888 888 88888888 888        888  888
+        888     Y8b.     888 Y8b.     888        Y88b 888
+        888      "Y8888  888  "Y8888  888         "Y88888
+                                                      888
+                                                 Y8b d88P
+                                                  "Y88P"
+    Setup Wizard
+    """)
+    setup_settings = {}
+
+    setup_settings["location"] = input("Enter Your nearest city this for weather :>")
+    print("Would you like to test the location? Y/N")
+    user_choice = input(":>").lower()
+    while True:
+        if user_choice == "n":
+            break
+
+        else:
+            os.system("curl wttr.in/" + setup_settings["location"])
+            user_choice = input("Is it correct please enter Y or N:>").lower()
+            if user_choice == "y":
+                break
+            else:
+                setup_settings["location"] = input("Enter Your nearest city this for weather :>")
+                user_choice = "UwU"
+
+    setup_settings["default_server"] = input("""
+Enter Your default server to connect to.
+(i would recommend server.fractaldev.co) leave blank to select have no default server. 
+:>""")
+
+    setup_settings["auto_return"] = False
+
+    write_settings("config.txt", setup_settings)
 
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 
-def setting(setting:str):
+def load_settings(file):
     try:
-        with open("config.txt") as fp:
-            lines = fp.readlines()
-            for line in lines:
-                if line.strip()[0] != "#":
-                    setting_line = line.strip().split("=")
-                    if setting_line[0] == setting:
-                        return setting_line[1]
+        with open(file, "r") as f:
+            return json.load(f)
 
-    except:
-        print("No config.txt")
+    except FileNotFoundError:
+        setup()
 
 
-def settings():
+def write_settings(file, saved_settings):
+    with open(file, "w") as f:
+        json.dump(saved_settings, f)
+
+
+def settings_menu():
     return "under development"
     
 
@@ -177,10 +220,12 @@ def  dum_ter(server, cSct):
             return None
 
 
+settings = load_settings("config.txt")
 os.system("cls")
 while True:
 
     while True:
+        settings = load_settings("config.txt")
         os.system("cls")
         print('''                                                      
                   ,,                                    
@@ -198,12 +243,15 @@ P'   MM   `7      MM                MM   `MM.
         if message != "":
             print(message)
             message = ""
+
+
+
         ip = input("Server ip:>")
         port = 1998
         server = ip.split(":")
 
         if ip == "":
-            ip = setting("default_server")
+            ip = settings["default_server"]
             server = ip.split(":")
             if ip != "None":
                 if len(server) == 2:
@@ -221,12 +269,13 @@ P'   MM   `7      MM                MM   `MM.
         elif ip == "help":
             message = """Different port other than 1998 use (:), 
             @ for localhost. Also Esc to stop and disconnect server.,
-            Setting to easily change config
+            settings to easily change config
+            More info Check the Github README
             Credit to igor_chubin for weather.
             """
 
         elif ip == "settings":
-            messgae = settings()
+            message = settings_menu()
 
         elif ip[len(ip) - 1] == ':':
             message = "Port not specified"
@@ -240,8 +289,6 @@ P'   MM   `7      MM                MM   `MM.
             port = int(server[1])
             break
 
-
-
         elif server[0] == "@":
 
             ip = "127.0.0.1"
@@ -251,7 +298,6 @@ P'   MM   `7      MM                MM   `MM.
             exit(1)
 
 
-        else:6
 
     try:
 
