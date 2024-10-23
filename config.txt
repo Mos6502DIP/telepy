@@ -1,1 +1,1 @@
-{"location": "norwich", "default_server": "server.fractaldev.co", "auto_return": false}
+{"location": "norwich", "default_server": "", "auto_return": false}

@@ -13,25 +13,24 @@ message = ""
 def setup():
     os.system('cls' if os.name == 'nt' else 'clear')
     print("No config file detected")
-    print("""
-    88888888888          888          8888888b.
-        888              888          888   Y88b
-        888              888          888    888
-        888      .d88b.  888  .d88b.  888   d88P 888  888
-        888     d8P  Y8b 888 d8P  Y8b 8888888P"  888  888
-        888     88888888 888 88888888 888        888  888
-        888     Y8b.     888 Y8b.     888        Y88b 888
-        888      "Y8888  888  "Y8888  888         "Y88888
-                                                      888
-                                                 Y8b d88P
-                                                  "Y88P"
+    print(colour("""
+88888888888          888          8888888b.
+    888              888          888   Y88b
+    888              888          888    888
+    888      .d88b.  888  .d88b.  888   d88P 888  888
+    888     d8P  Y8b 888 d8P  Y8b 8888888P"  888  888
+    888     88888888 888 88888888 888        888  888
+    888     Y8b.     888 Y8b.     888        Y88b 888
+    888      "Y8888  888  "Y8888  888         "Y88888
+                                                  888
+                                            Y8b d88P
+                                             "Y88P"
     Setup Wizard
-    """)
+    """, "green"))
     setup_settings = {}
 
     setup_settings["location"] = input("Enter Your nearest city this for weather :>")
-    print("Would you like to test the location? Y/N")
-    user_choice = input(":>").lower()
+    user_choice = input("Would you like to test the location? Y/N:>").lower()
     while True:
         if user_choice == "n":
             break
@@ -253,7 +252,7 @@ P'   MM   `7      MM                MM   `MM.
         if ip == "":
             ip = settings["default_server"]
             server = ip.split(":")
-            if ip != "None":
+            if ip != "":
                 if len(server) == 2:
 
                     ip = server[0]
@@ -264,7 +263,7 @@ P'   MM   `7      MM                MM   `MM.
                     break
                 break
             else:
-                message = "No default server specified config"
+                message = "No default server specified config.txt"
 
         elif ip == "help":
             message = """Different port other than 1998 use (:), 
