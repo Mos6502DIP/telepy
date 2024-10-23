@@ -3,6 +3,8 @@ import json
 import socket
 import os
 from getpass import getpass
+
+import keyboard
 import keyboard as kb
 
 ver = "1.5"
@@ -70,10 +72,29 @@ def write_settings(file, saved_settings):
     with open(file, "w") as f:
         json.dump(saved_settings, f)
 
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def settings_menu():
-    return "under development"
-    
+    clear()
+    options = ["*", "", "", ""]
+    settings_temp = load_settings("config.txt")
+    def update_menu():
+        print(f"""
+        Settings Menu (use arrow keys to navigate)
+        Weather Location : {settings_temp["location"]} [{options[0]}]
+        Default Server : {settings_temp["default_server"]} [{options[1]}]
+        Auto-Return : {settings_temp["auto_return"]} [{options[2]}]
+        Save and exit : {settings_temp["save_settings"]} [{options[3]}]
+        """)
+
+    def move_option(list, direction):
+
+    update_menu()
+    while True:
+        if keyboard.is_pressed("down"):
+            options = move_option(options, "down")
+        
 
 def colour(text, color, background=None):
     colors = {
@@ -145,7 +166,7 @@ def  dum_ter(server, cSct):
             return "exit"
 
         case "3":
-            os.system("cls")
+            clear()
             return None
 
         case "4":
@@ -220,12 +241,12 @@ def  dum_ter(server, cSct):
 
 
 settings = load_settings("config.txt")
-os.system("cls")
+clear()
 while True:
 
     while True:
         settings = load_settings("config.txt")
-        os.system("cls")
+        clear()
         print('''                                                      
                   ,,                                    
 MMP""MM""YMM    `7MM              `7MM"""Mq.            
@@ -263,7 +284,7 @@ P'   MM   `7      MM                MM   `MM.
                     break
                 break
             else:
-                message = "No default server specified config.txt"
+                message = "No default server specified (enter settings to change default server)"
 
         elif ip == "help":
             message = """Different port other than 1998 use (:), 
@@ -322,7 +343,7 @@ P'   MM   `7      MM                MM   `MM.
 
 
 
-        os.system("cls")
+        clear()
     except socket.error as e:
         print(f"Socket error: {e}")
 
