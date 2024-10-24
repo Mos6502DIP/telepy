@@ -2,6 +2,7 @@ import hashlib
 import json
 import socket
 import os
+import time
 from getpass import getpass
 
 import keyboard
@@ -11,6 +12,27 @@ ver = "1.5"
 device = "win"
 
 message = ""
+
+
+def select_weather():
+    time.sleep(0.6)
+    location = input("Enter Your nearest city this for weather :>")
+    user_choice = input("Would you like to test the location? Y/N:>").lower()
+    while True:
+        if user_choice == "n":
+            break
+
+        else:
+            clear()
+            os.system("curl wttr.in/" + location)
+            time.sleep(0.5)
+            user_choice = input("Is it correct please enter Y or N:>").lower()
+            if user_choice == "y":
+                return location
+            else:
+                location = input("Enter Your nearest city this for weather :>")
+                user_choice = "UwU"
+
 
 def setup():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -31,29 +53,16 @@ def setup():
     """, "green"))
     setup_settings = {}
 
-    setup_settings["location"] = input("Enter Your nearest city this for weather :>")
-    user_choice = input("Would you like to test the location? Y/N:>").lower()
-    while True:
-        if user_choice == "n":
-            break
+    setup_settings["location"] = select_weather()
 
-        else:
-            os.system("curl wttr.in/" + setup_settings["location"])
-            user_choice = input("Is it correct please enter Y or N:>").lower()
-            if user_choice == "y":
-                break
-            else:
-                setup_settings["location"] = input("Enter Your nearest city this for weather :>")
-                user_choice = "UwU"
-
-    setup_settings["default_server"] = input("""
-Enter Your default server to connect to.
-(i would recommend server.fractaldev.co) leave blank to select have no default server. 
-:>""")
+    setup_settings["default_server"] = input("""Enter Your default server to connect to (i would recommend server.fractaldev.co).
+Leave blank to select have no default server.:>""")
 
     setup_settings["auto_return"] = False
 
     write_settings("config.txt", setup_settings)
+
+    input("Saved! Press Enter to continue you can changes these at anytime just enter settings at the prompt...")
 
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -81,20 +90,52 @@ def settings_menu():
     settings_temp = load_settings("config.txt")
     def update_menu():
         print(f"""
-        Settings Menu (use arrow keys to navigate)
-        Weather Location : {settings_temp["location"]} [{options[0]}]
-        Default Server : {settings_temp["default_server"]} [{options[1]}]
-        Auto-Return : {settings_temp["auto_return"]} [{options[2]}]
-        Save and exit : {settings_temp["save_settings"]} [{options[3]}]
+Settings Menu (use arrow keys to navigate enter to select)
+Weather Location : {settings_temp["location"]} [{options[0]}]
+Default Server : {settings_temp["default_server"]} [{options[1]}]
+Auto-Return : {settings_temp["auto_return"]} [{options[2]}]
+Save and exit [{options[3]}]
         """)
 
-    def move_option(list, direction):
+    def move_option(select, direction):
+        current_index = select.index("*")
 
+        if direction == "up":
+            if current_index == 0:
+                return select  # already at the top, no need to move
+            else:
+                select[current_index - 1], select[current_index] = "*", ""  # swap the items
+
+        elif direction == "down":
+            if current_index == len(select) - 1:
+                return select  # already at the bottom, no need to move
+            else:
+                select[current_index + 1], select[current_index] = "*", ""  # swap the items
+
+        return select
     update_menu()
     while True:
         if keyboard.is_pressed("down"):
             options = move_option(options, "down")
-        
+            clear()
+            update_menu()
+            time.sleep(0.2)
+
+        elif keyboard.is_pressed("up"):
+            options = move_option(options, "up")
+            clear()
+            update_menu()
+            time.sleep(0.2)
+
+        elif keyboard.is_pressed("enter"):
+            if options[0] == "*":
+
+                settings_temp["location"] = select_weather()
+                clear()
+                time.sleep(0.2)
+                update_menu()
+
+
 
 def colour(text, color, background=None):
     colors = {
