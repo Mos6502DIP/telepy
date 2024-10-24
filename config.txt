@@ -1,1 +1,1 @@
-{"location": "london", "default_server": "server.cum", "auto_return": false}
+{"location": "london", "default_server": "server.fractaldev.co", "auto_return": false}
