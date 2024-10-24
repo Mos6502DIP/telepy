@@ -4,9 +4,8 @@ import socket
 import os
 import time
 from getpass import getpass
-
 import keyboard
-import keyboard as kb
+
 
 ver = "1.5"
 device = "win"
@@ -20,10 +19,10 @@ def select_weather():
     user_choice = input("Would you like to test the location? Y/N:>").lower()
     while True:
         if user_choice == "n":
-            break
+            return location
 
         else:
-            clear()
+
             os.system("curl wttr.in/" + location)
             time.sleep(0.5)
             user_choice = input("Is it correct please enter Y or N:>").lower()
@@ -64,6 +63,7 @@ Leave blank to select have no default server.:>""")
 
     input("Saved! Press Enter to continue you can changes these at anytime just enter settings at the prompt...")
 
+
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -81,15 +81,42 @@ def write_settings(file, saved_settings):
     with open(file, "w") as f:
         json.dump(saved_settings, f)
 
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def get_key(name):
+    # Check if the key is pressed
+    if keyboard.is_pressed(name):
+        # Wait until the key is released
+        while keyboard.is_pressed(name):
+            pass
+        # Return True after the key is released
+
+        return True
+    else:
+        # If the key was not pressed, return False
+        return False
+
 
 def settings_menu():
     clear()
     options = ["*", "", "", ""]
     settings_temp = load_settings("config.txt")
+    logo = """                                                                  
+ ███████╗███████╗████████╗████████╗██╗███╗   ██╗ ██████╗ ███████╗ 
+ ██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██║████╗  ██║██╔════╝ ██╔════╝ 
+ ███████╗█████╗     ██║      ██║   ██║██╔██╗ ██║██║  ███╗███████╗ 
+ ╚════██║██╔══╝     ██║      ██║   ██║██║╚██╗██║██║   ██║╚════██║ 
+ ███████║███████╗   ██║      ██║   ██║██║ ╚████║╚██████╔╝███████║ 
+ ╚══════╝╚══════╝   ╚═╝      ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ 
+                                                                  
+"""
+
     def update_menu():
         print(f"""
+{colour(logo, "white", "blue")}
 Settings Menu (use arrow keys to navigate enter to select)
 Weather Location : {settings_temp["location"]} [{options[0]}]
 Default Server : {settings_temp["default_server"]} [{options[1]}]
@@ -115,25 +142,43 @@ Save and exit [{options[3]}]
         return select
     update_menu()
     while True:
-        if keyboard.is_pressed("down"):
+        if get_key("down"):
+            keyboard.read_event()
             options = move_option(options, "down")
             clear()
             update_menu()
             time.sleep(0.2)
 
-        elif keyboard.is_pressed("up"):
+        elif get_key("up"):
+            keyboard.read_event()
             options = move_option(options, "up")
             clear()
             update_menu()
             time.sleep(0.2)
 
-        elif keyboard.is_pressed("enter"):
+        elif get_key("enter"):
+            keyboard.read_event()
             if options[0] == "*":
-
-                settings_temp["location"] = select_weather()
                 clear()
-                time.sleep(0.2)
-                update_menu()
+                settings_temp["location"] = select_weather()
+
+            if options[1] == "*":
+                time.sleep(0.3)
+                settings_temp["default_server"] = input("Enter new default server: ")
+
+            if options[2] == "*":
+                if settings_temp["auto_return"]:
+                    settings_temp["auto_return"] = False
+                else:
+                    settings_temp["auto_return"] = True
+
+            if options[3] == "*":
+                write_settings("config.txt", settings_temp)
+                return "Settings Saved"
+
+            clear()
+            time.sleep(0.2)
+            update_menu()
 
 
 
@@ -182,7 +227,8 @@ def colour(text, color, background=None):
 
     return f"{background_code}{color_code}{text}{colors['reset']}"
 
-def  dum_ter(server, cSct):
+
+def dum_ter(server, cSct):
     global message
 
     server_m = server[0]  # the first digit is the mode set by the server.
@@ -227,7 +273,7 @@ def  dum_ter(server, cSct):
             return None
 
         case "7":
-            os.system("curl wttr.in")
+            os.system(f'curl wttr.in/{load_settings("config.txt")["location"]}')
             return None
 
         case "8":
@@ -329,11 +375,10 @@ P'   MM   `7      MM                MM   `MM.
 
         elif ip == "help":
             message = """Different port other than 1998 use (:), 
-            @ for localhost. Also Esc to stop and disconnect server.,
-            settings to easily change config
-            More info Check the Github README
-            Credit to igor_chubin for weather.
-            """
+@ for localhost. Also Esc to stop and disconnect server.,
+settings to easily change config
+More info Check the Github README
+Credit to igor_chubin for weather (wttr.in)."""
 
         elif ip == "settings":
             message = settings_menu()
@@ -358,8 +403,6 @@ P'   MM   `7      MM                MM   `MM.
         elif ip == "exit":
             exit(1)
 
-
-
     try:
 
         mode = 0
@@ -368,9 +411,6 @@ P'   MM   `7      MM                MM   `MM.
         Sct.connect((ip, port))  # connecting to the server
 
         while True:
-
-
-
             server_rev = Sct.recv(6000).decode()
 
             if kb.is_pressed("ESC"):
@@ -381,15 +421,7 @@ P'   MM   `7      MM                MM   `MM.
 
             if dum_ter(server_rev.split("|"),Sct) is not None:
                 break
-
-
-
         clear()
     except socket.error as e:
         print(f"Socket error: {e}")
-
-
-
-
-
 
