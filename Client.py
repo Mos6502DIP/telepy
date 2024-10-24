@@ -7,6 +7,7 @@ from getpass import getpass
 import keyboard
 
 
+
 ver = "1.5"
 device = "win"
 
@@ -14,7 +15,7 @@ message = ""
 
 
 def select_weather():
-    time.sleep(0.6)
+
     location = input("Enter Your nearest city this for weather :>")
     user_choice = input("Would you like to test the location? Y/N:>").lower()
     while True:
@@ -86,23 +87,8 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def get_key(name):
-    # Check if the key is pressed
-    if keyboard.is_pressed(name):
-        # Wait until the key is released
-        while keyboard.is_pressed(name):
-            pass
-        # Return True after the key is released
-
-        return True
-    else:
-        # If the key was not pressed, return False
-        return False
-
-
 def settings_menu():
     clear()
-    options = ["*", "", "", ""]
     settings_temp = load_settings("config.txt")
     logo = """                                                                  
  ███████╗███████╗████████╗████████╗██╗███╗   ██╗ ██████╗ ███████╗ 
@@ -111,75 +97,42 @@ def settings_menu():
  ╚════██║██╔══╝     ██║      ██║   ██║██║╚██╗██║██║   ██║╚════██║ 
  ███████║███████╗   ██║      ██║   ██║██║ ╚████║╚██████╔╝███████║ 
  ╚══════╝╚══════╝   ╚═╝      ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ 
-                                                                  
+
 """
 
     def update_menu():
         print(f"""
 {colour(logo, "white", "blue")}
-Settings Menu (use arrow keys to navigate enter to select)
-Weather Location : {settings_temp["location"]} [{options[0]}]
-Default Server : {settings_temp["default_server"]} [{options[1]}]
-Auto-Return : {settings_temp["auto_return"]} [{options[2]}]
-Save and exit [{options[3]}]
+Settings Menu (use numbers to navigate, Enter to select)
+1. Weather Location : {settings_temp["location"]}
+2. Default Server : {settings_temp["default_server"]}
+3. Auto-Return : {settings_temp["auto_return"]}
+4. Save and exit
         """)
 
-    def move_option(select, direction):
-        current_index = select.index("*")
-
-        if direction == "up":
-            if current_index == 0:
-                return select  # already at the top, no need to move
-            else:
-                select[current_index - 1], select[current_index] = "*", ""  # swap the items
-
-        elif direction == "down":
-            if current_index == len(select) - 1:
-                return select  # already at the bottom, no need to move
-            else:
-                select[current_index + 1], select[current_index] = "*", ""  # swap the items
-
-        return select
     update_menu()
     while True:
-        if get_key("down"):
-            keyboard.read_event()
-            options = move_option(options, "down")
-            clear()
-            update_menu()
-            time.sleep(0.2)
+        choice = input("Choose an option: ").strip()
 
-        elif get_key("up"):
-            keyboard.read_event()
-            options = move_option(options, "up")
-            clear()
-            update_menu()
-            time.sleep(0.2)
+        if choice == "1":
 
-        elif get_key("enter"):
-            keyboard.read_event()
-            if options[0] == "*":
-                clear()
-                settings_temp["location"] = select_weather()
+            settings_temp["location"] = select_weather()
+        elif choice == "2":
 
-            if options[1] == "*":
-                time.sleep(0.3)
-                settings_temp["default_server"] = input("Enter new default server: ")
+            settings_temp["default_server"] = input("Enter new default server: ").strip()
+        elif choice == "3":
 
-            if options[2] == "*":
-                if settings_temp["auto_return"]:
-                    settings_temp["auto_return"] = False
-                else:
-                    settings_temp["auto_return"] = True
+            settings_temp["auto_return"] = not settings_temp["auto_return"]
+        elif choice == "4":
+            write_settings("config.txt", settings_temp)
+            print("Settings Saved.")
+            return "Settings saved"
+        else:
+            print("Invalid option, please try again.")
 
-            if options[3] == "*":
-                write_settings("config.txt", settings_temp)
-                return "Settings Saved"
-
-            clear()
-            time.sleep(0.2)
-            update_menu()
-
+        # Clear screen and update the menu after making changes
+        clear()
+        update_menu()
 
 
 def colour(text, color, background=None):
@@ -307,9 +260,9 @@ def dum_ter(server, cSct):
 
         case "13":
 
-            is_key = kb.is_pressed(data)
-
-            cSct.send(bytes(str(is_key), "utf-8"))
+            #  is_key = kb.is_pressed(data)
+            print("Mode 13 unavailable")
+            #  cSct.send(bytes(str(is_key), "utf-8"))
             return None
 
         case "14":
@@ -329,6 +282,7 @@ def dum_ter(server, cSct):
 
 settings = load_settings("config.txt")
 clear()
+
 while True:
 
     while True:
@@ -413,7 +367,7 @@ Credit to igor_chubin for weather (wttr.in)."""
         while True:
             server_rev = Sct.recv(6000).decode()
 
-            if kb.is_pressed("ESC"):
+            if keyboard.is_pressed("ESC"):
                 message = "Disconnected by User"
                 break
 
@@ -421,6 +375,10 @@ Credit to igor_chubin for weather (wttr.in)."""
 
             if dum_ter(server_rev.split("|"),Sct) is not None:
                 break
+
+        if load_settings("config.txt")["auto_return"]:
+            print(message)
+            input("Press Enter to continue...")
         clear()
     except socket.error as e:
         print(f"Socket error: {e}")
