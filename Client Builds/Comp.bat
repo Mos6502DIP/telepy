@@ -1,1 +1,0 @@
-pyinstaller --onefile  --icon=Final.ico Client.py

@@ -5,7 +5,7 @@ import os
 import time
 from getpass import getpass
 import keyboard
-
+# Telepy Copyright 2024 Peter Cakebread
 
 
 ver = "1.5"
@@ -35,6 +35,8 @@ def select_weather():
 
 
 def setup():
+    global message
+
     os.system('cls' if os.name == 'nt' else 'clear')
     print("No config file detected")
     print(colour("""
@@ -62,7 +64,8 @@ Leave blank to select have no default server.:>""")
 
     write_settings("config.txt", setup_settings)
 
-    input("Saved! Press Enter to continue you can changes these at anytime just enter settings at the prompt...")
+    message = f"Welcome to Tele Py :3"
+    input("Saved! Press Enter to continue you can changes these at anytime just enter `settings` at the prompt...")
 
 
 def hash_string(password):
@@ -332,7 +335,15 @@ P'   MM   `7      MM                MM   `MM.
 @ for localhost. Also Esc to stop and disconnect server.,
 settings to easily change config
 More info Check the Github README
-Credit to igor_chubin for weather (wttr.in)."""
+"""
+
+        elif ip == "credits":
+            message = f"""
+Credits
+    {colour("Programing", "green")} - {colour("Peter Cakebread", "blue")}
+    {colour("Testing", "light_magenta")} - {colour("Reuben D", "light_blue")}
+    {colour("Weather (wttr.in)", "yellow")} - {colour("igor_chubin", "light-cyan")}    
+            """
 
         elif ip == "settings":
             message = settings_menu()
