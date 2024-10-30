@@ -136,7 +136,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 # Planned updates
 
-## 30 October - v1.5
+## 30 October 9pm GMT - v1.5
 
 ### Revamped Syntax
 
