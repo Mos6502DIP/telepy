@@ -136,23 +136,13 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 # Planned updates
 
-## 30 October 9pm GMT - v1.5
+## v1.5.1
 
-### Revamped Syntax
+### Fix issues due to open threads
 
-The syntax will be cleaner and easier to understand and clients have become objects Previous `tp.printt(f"Client version {c_version}", client)` Now looks like `client.print(f"Version: {c_version}")`.
+Due to current structure, threads are left running when the client informally disconnects (server doesn't disconnect the user). THis can lead to lots of resources being uses to keep the thread running.
 
-### Cleaner server realise
-
-This means the example server script only contains what is necessary. This was because of the unnecessary test script although show you how all the functions works now that is no longer required due to the updated `README`.
-
-### Client Settings
-
-In the Client there will feature to change setting within the client instead of editing the `config.txt` the file will also be in a json and also created automatically if the file is not already present. Also, the weather location can be configured in here this info can not be shared with servers.
-
-
-
-## v1.6
+## v1.5.2
 
 ### Automatic Updates
 
