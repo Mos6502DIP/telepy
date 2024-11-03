@@ -9,7 +9,7 @@
 * [Client](#client)
   * [setup](#setup)
   * [Connecting to a server](#connecting-to-a-server)
-  * [Config](#config)
+  * [Settings](#settings)
 * [Server](#server)
   * [Setup](#setup-1)
   * [Server Structure](#server-structure)
@@ -18,12 +18,11 @@
 * [Contributing](#contributing)
   * [License](#license)
 * [Planned updates](#planned-updates)
-  * [30 October - v1.5](#30-october---v15)
-    * [Revamped Syntax](#revamped-syntax)
-    * [Cleaner server realise](#cleaner-server-realise)
-    * [Client Settings](#client-settings)
-  * [v1.6](#v16)
+  * [v1.5.1](#v151)
     * [Automatic Updates](#automatic-updates)
+    * [Bug fix](#bug-fix)
+  * [v1.5.2](#v152)
+    * [Cookie-like feature](#cookie-like-feature)
 <!-- TOC -->
 
 # Client
@@ -34,13 +33,11 @@ To set up the client to download the latest release this should be in the format
 
 To connect the server just enter the ip or the domain by default servers rn on port 1998. For the custom ports add `:` at the end of the IP/domain then the port eg `exsample.com:1234`. For the local host just enter `@` and `:` for the port eg `@:1234`.
 
-## Config
+## Settings
 
-As previously mentioned there is a file called `config.txt` that will contain the configuration for the client. They are currently in the format of `setting=option` with `#` being used for comments. In the client when you press enter with no IP/Domain it will use the default domain which is specified in this file as `default_server`.
+Settings can be easily changed at the prompt just enter `settings`.
 
 # Server
-
-! Warning this documentation may not represent the current version as this was made for 1.5 which is to be released as of making this document !
 
 ## Setup
 
@@ -120,7 +117,7 @@ This specifies the configuration for the server in the file called `server_confi
 
 # Contributing
 
-While this personal project, contributions are welcome! Please follow these steps to contribute:
+While this is a personal project, contributions are welcome! Please follow these steps to contribute:
 
 1. Fork the repository.
 2. Create a feature branch (`git checkout -b feature-branch`).
@@ -128,7 +125,7 @@ While this personal project, contributions are welcome! Please follow these step
 4. Push to the branch (`git push origin feature-branch`).
 5. Open a pull request.
 
-There will be a list of features at the bottom of the page for future updates that i am planning to working feel free to give them a shot any help is appreciated.
+There will be a list of features at the bottom of the page for future updates that I am planning to work on feel free to give them a shot any help is appreciated.
 
 ## License
 
@@ -138,13 +135,19 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## v1.5.1
 
-### Fix issues due to open threads
+### Automatic Updates
 
-Due to current structure, threads are left running when the client informally disconnects (server doesn't disconnect the user). THis can lead to lots of resources being uses to keep the thread running.
+The client will automatically update and also be able to revert to older versions. not older than 1.3.1 due to older version security risks.
+
+### Bug fix
+
+Users can set on input for an indefinite amount of time. The causes server resources to be used while the client is not engaged. This will be fixed with a time-out period set in `server_config.txt`.
 
 ## v1.5.2
 
-### Automatic Updates
+### Cookie-like feature
 
-The client will automatically update and also able to revert to older versions. not older than 1.3.1 due to older version security risks.
+This may be implemented in different ways such as basic cookies but also a session-like feature featured in flask.
+
+
 
