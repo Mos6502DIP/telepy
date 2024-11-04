@@ -149,5 +149,11 @@ Users can set on input for an indefinite amount of time. The causes server resou
 
 This may be implemented in different ways such as basic cookies but also a session-like feature featured in flask.
 
+## Potential updates
+
+- Assic art generator (text like the Tele py logo)
+- Compiled linux disttro (client)
+- Better cli for client eg `telepy server.fractaldev.co` instead of running the client then entering it.
+- Api service to check server status.
 
 
