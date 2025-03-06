@@ -4,12 +4,11 @@ import socket
 import os
 import time
 from getpass import getpass
-import keyboard
 # Telepy Copyright 2024 Peter Cakebread
 
 
-ver = "1.5.2"
-device = "win"
+ver = "1.5"
+device = "Crt"
 
 message = ""
 
@@ -139,49 +138,7 @@ Settings Menu (use numbers to navigate, Enter to select)
 
 
 def colour(text, color, background=None):
-    colors = {
-        "black": "\033[30m",
-        "red": "\033[31m",
-        "green": "\033[32m",
-        "yellow": "\033[33m",
-        "blue": "\033[34m",
-        "magenta": "\033[35m",
-        "cyan": "\033[36m",
-        "white": "\033[37m",
-        "light_black": "\033[90m",
-        "light_red": "\033[91m",
-        "light_green": "\033[92m",
-        "light_yellow": "\033[93m",
-        "light_blue": "\033[94m",
-        "light_magenta": "\033[95m",
-        "light_cyan": "\033[96m",
-        "light_white": "\033[97m",
-        'reset': '\033[0m'
-    }
-    backgrounds = {
-        "black": "\033[40m",
-        "red": "\033[41m",
-        "green": "\033[42m",
-        "yellow": "\033[43m",
-        "blue": "\033[44m",
-        "magenta": "\033[45m",
-        "cyan": "\033[46m",
-        "white": "\033[47m",
-        "light_black": "\033[100m",
-        "light_red": "\033[101m",
-        "light_green": "\033[102m",
-        "light_yellow": "\033[103m",
-        "light_blue": "\033[104m",
-        "light_magenta": "\033[105m",
-        "light_cyan": "\033[106m",
-        "light_white": "\033[107m",
-        'reset': '\033[0m'
-    }
-
-    color_code = colors.get(color, colors['reset'])
-    background_code = backgrounds.get(background, '')
-
-    return f"{background_code}{color_code}{text}{colors['reset']}"
+    return text
 
 
 def dum_ter(server, cSct):
@@ -323,7 +280,6 @@ P'   MM   `7      MM                MM   `MM.
                     ip = server[0]
                     if ip == "@":
                         ip = "127.0.0.1"
-                        
 
                     port = int(server[1])
                     break
@@ -369,11 +325,6 @@ Credits
         elif ip == "exit":
             exit(1)
 
-        else:
-            ip = server[0]
-            break
-        
-
     try:
 
         mode = 0
@@ -383,10 +334,6 @@ Credits
 
         while True:
             server_rev = Sct.recv(6000).decode()
-
-            if keyboard.is_pressed("ESC"):
-                message = "Disconnected by User"
-                break
 
             Sct.send("ACK".encode())
 
