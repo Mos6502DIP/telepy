@@ -8,7 +8,7 @@ import keyboard
 # Telepy Copyright 2024 Peter Cakebread
 
 
-ver = "1.5.2"
+ver = "1.5"
 device = "win"
 
 message = ""
@@ -323,7 +323,6 @@ P'   MM   `7      MM                MM   `MM.
                     ip = server[0]
                     if ip == "@":
                         ip = "127.0.0.1"
-                        
 
                     port = int(server[1])
                     break
@@ -368,11 +367,6 @@ Credits
 
         elif ip == "exit":
             exit(1)
-
-        else:
-            ip = server[0]
-            break
-        
 
     try:
 
