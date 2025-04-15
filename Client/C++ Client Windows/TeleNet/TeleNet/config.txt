@@ -1,0 +1,5 @@
+{
+    "auto_return": true,
+    "default_server": "@",
+    "location": "norwich"
+}

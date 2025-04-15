@@ -4,3 +4,9 @@
 /venv
 *.pyc
 test.py
+*.vsidx
+/Client/C++ Client Windows/TeleNet/.vs
+/Client/C++ Client Windows/TeleNet/packages/Microsoft.Windows.CppWinRT.2.0.220531.1
+/Client/C++ Client Windows/TeleNet/TeleNet/x64/Debug/Generated Files
+/Client/C++ Client Windows/TeleNet/TeleNet/x64/Debug/TeleNet.tlog
+/Client/C++ Client Windows/TeleNet/TeleNet/x64/Debug
