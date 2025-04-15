@@ -4,9 +4,10 @@
 #include "network.h"
 
 
+
 int main() {
     clearScreen();
-    std::cout << "Welcome to Telepy (C++ Edition)!" << std::endl;
+    std::cout << "Welcome to TeleNet (C++ Edition)! TeleNet v1.5" << std::endl;
 
     Settings settings;
     if (!loadSettings("config.txt", settings)) {
@@ -14,8 +15,8 @@ int main() {
         saveSettings("config.txt", settings);
     }
 
-    std::cout << "Your weather location is set to: " << settings.location << std::endl;
-    std::cout << "Default server: " << (settings.defaultServer.empty() ? "None" : settings.defaultServer) << std::endl;
+    //std::cout << "Your weather location is set to: " << settings.location << std::endl;
+    //std::cout << "Default server: " << (settings.defaultServer.empty() ? "None" : settings.defaultServer) << std::endl;
 
     std::string ip;
     std::cout << "Enter server IP (or leave blank for default): ";
