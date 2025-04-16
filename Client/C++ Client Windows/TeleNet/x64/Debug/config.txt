@@ -1,5 +1,0 @@
-{
-    "auto_return": false,
-    "default_server": "",
-    "location": "london"
-}
