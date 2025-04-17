@@ -17,7 +17,6 @@ class setup_connection():
     def __init__(self, tn, socket):
         self.tn = tn
         self.socket = socket
-        self.line_cache = ''
         self.message = ''
 
     def print(self, string):
@@ -25,22 +24,26 @@ class setup_connection():
             lines = string.splitlines()
             for line in lines:
                
-                for i in self.line_cache:
-                    self.tn.write(b"\033[G")
+                
             
-                line_cache = line
                 self.tn.write(f'{line}'.encode())
                 self.tn.write(b'\r\n')
         else:
-            for i in self.line_cache:
-                    self.tn.write(b"\033[G") #properly returns the cursor
             
-            line_cache = string
+            
+            
             self.tn.write(f'{string}'.encode())
             self.tn.write(b'\r\n')
 
     def clear(self):
         self.tn.write(b"\033[2J")
+
+    def input(self, string):
+        
+        
+        
+        self.tn.write(f'{string}'.encode())
+        return self.tn.read_until(b"\n").decode('utf-8').strip()
 
     
 
@@ -205,9 +208,9 @@ def handle_connection(connection):
                                                 OOb"       
             ''')
             connection.print(f'{colour("Telepy", "green")} by {colour("Peter Cakebread", "blue")} 2025 v{ver} ({device})')
-            if message != "":
-                print(message)
-                message = ""
+            if connection.message != "":
+                print(connection.message)
+                connection.message = ""
 
 
 
@@ -216,7 +219,7 @@ def handle_connection(connection):
             server = ip.split(":")
 
             if ip == "":
-                ip = settings["default_server"]
+                ip = '@'
                 server = ip.split(":")
                 if ip != "":
                     if len(server) == 2:
