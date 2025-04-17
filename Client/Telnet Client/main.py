@@ -1,6 +1,10 @@
 import telnetlib
 import socket
 import subprocess
+from getpass import getpass
+import hashlib
+import json
+import threading  # This is use for multiple clients
 
 
 # Constants for the BBS System
@@ -9,29 +13,29 @@ PORT = 23  # Telnet default port
 ver = "1.5"
 device = "Telnet Client"
 
-# Basic authentication (For demonstration purposes, use a static username and password)
-VALID_USERNAME = 'user'
-VALID_PASSWORD = 'password'
+IAC  = b'\xff'
+WILL = b'\xfb'
+WONT = b'\xfc'
+DO   = b'\xfd'
+DONT = b'\xfe'
+ECHO = b'\x01'
+
+active_connections = []
 
 class setup_connection():
     def __init__(self, tn, socket):
         self.tn = tn
         self.socket = socket
         self.message = ''
+        self.auto_return = False
 
     def print(self, string):
         if '\n' in string or '\r\n' in string: # Multi line have to be processed manually
             lines = string.splitlines()
             for line in lines:
-               
-                
-            
                 self.tn.write(f'{line}'.encode())
                 self.tn.write(b'\r\n')
         else:
-            
-            
-            
             self.tn.write(f'{string}'.encode())
             self.tn.write(b'\r\n')
 
@@ -40,12 +44,36 @@ class setup_connection():
 
     def input(self, string):
         
-        
-        
         self.tn.write(f'{string}'.encode())
         return self.tn.read_until(b"\n").decode('utf-8').strip()
-
     
+    def hidden_input(self, string):
+        self.tn.write(f'{string}'.encode())
+        self.tn.sock.sendall(IAC + WONT + ECHO)
+        user_string = self.tn.read_until(b"\n").decode('utf-8').strip()
+        self.tn.sock.sendall(IAC + WILL + ECHO)
+        self.tn.write(b'\r\n')
+        return user_string
+    
+    def print_no_new_line(self, string):
+        self.tn.write(f'{string}'.encode())
+   
+    def new_line(self):
+        self.tn.write(b'\r\n')
+
+
+def render_screen(screen):
+    return '\n'.join(''.join('{:4}'.format(item) for item in row) for row in screen)
+
+def online_count():
+    # Clean up finished threads
+    for thread in active_connections[:]:
+        if not thread.is_alive():
+            active_connections.remove(thread)
+    return len(active_connections)
+
+def hash_string(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
 def colour(text, color, background=None):
     colors = {
@@ -92,7 +120,7 @@ def colour(text, color, background=None):
 
     return f"{background_code}{color_code}{text}{colors['reset']}"
 
-def dum_ter(server, cSct):
+def dum_ter(server, cSct, connection):
 
     server_m = server[0]  # the first digit is the mode set by the server.
 
@@ -100,31 +128,31 @@ def dum_ter(server, cSct):
     
     match server_m:
         case "0":
-            print(data)
+            connection.print(data)
             return None
 
         case "1":
-            user_input = input(data)
+            user_input = connection.input(data)
             if user_input == "":
                 user_input = "None"
             cSct.send(bytes(user_input, "utf-8"))
             return None
 
         case "2":
-            message = data
+            connection.message = data
             cSct.close()
             return "exit"
 
         case "3":
-            clear()
+            connection.clear()
             return None
 
         case "4":
-            print("")
+            connection.print("")
             return None
 
         case "5":
-            user_input = hash_string(str(getpass(data)))
+            user_input = hash_string(connection.hidden_input(data))
             if user_input == "":
                 user_input = "None"
             cSct.send(bytes(user_input, "utf-8"))
@@ -136,25 +164,25 @@ def dum_ter(server, cSct):
             return None
 
         case "7":
-            os.system(f'curl wttr.in/{load_settings("config.txt")["location"]}')
+            connection.print('Built in weather function disabled')
             return None
 
         case "8":
-            user_input = getpass(data)
+            user_input = connection.hidden_input(data)
             if user_input == "":
                 user_input = "None"
             cSct.send(bytes(user_input, "utf-8"))
             return None
 
         case "9":
-            print(colour(data, json.loads(server[1])[0], json.loads(server[1])[1]))
+            connection.print(colour(data, json.loads(server[1])[0], json.loads(server[1])[1]))
             return None
 
         case "10":
 
             screen = json.loads(data)
-            print('\n'.join([''.join(['{:4}'.format(item) for item in row])
-                             for row in screen]))
+            formatted = render_screen(screen)
+            connection.print(formatted)
             return None
 
         case "11":
@@ -163,15 +191,16 @@ def dum_ter(server, cSct):
             for row in screen:
                 for item in row:
                     char, fg_color, bg_color = item
-                    # Print the character with the specified foreground and background colors
-                    print(colour(char, fg_color, bg_color), end="")
-                print()  # Move to the next line after printing each row
+                    # connection.print the character with the specified foreground and background colors
+                    connection.print_no_new_line(colour(char, fg_color, bg_color))
+                    connection.newline()
+                
             return None
 
         case "13":
 
             #  is_key = kb.is_pressed(data)
-            print("Mode 13 unavailable")
+            connection.print("Mode 13 unavailable")
             #  cSct.send(bytes(str(is_key), "utf-8"))
             return None
 
@@ -186,11 +215,21 @@ def dum_ter(server, cSct):
             return "exit"
 
         case _:
-            print("Out dated client")
+            connection.print("Out dated client")
             return None       
+
+def handle_connection_wrapper(connection):
+    try:
+        handle_connection(connection)
+    finally:
+        # Remove thread from active list when done
+        current = threading.current_thread()
+        if current in active_connections:
+            active_connections.remove(current)
 
 # Function to handle user interaction
 def handle_connection(connection):
+    
     while True:
 
         while True:
@@ -209,11 +248,11 @@ def handle_connection(connection):
             ''')
             connection.print(f'{colour("Telepy", "green")} by {colour("Peter Cakebread", "blue")} 2025 v{ver} ({device})')
             if connection.message != "":
-                print(connection.message)
+                connection.print(connection.message)
                 connection.message = ""
 
 
-
+            connection.print(f"Online ({online_count()}) Leave blank for Telepy Connect (BBS)")
             ip = connection.input("Server ip:>")
             port = 1998
             server = ip.split(":")
@@ -227,22 +266,24 @@ def handle_connection(connection):
                         ip = server[0]
                         if ip == "@":
                             ip = "127.0.0.1"
-
                         port = int(server[1])
                         break
+
+                    if ip == "@":
+                            ip = "127.0.0.1"
                     break
                 else:
-                    message = "No default server specified (enter settings to change default server)"
+                    connection.message = "No default server specified (enter settings to change default server)"
 
             elif ip == "help":
-                message = """Different port other than 1998 use (:), 
-    @ for localhost. Also Esc to stop and disconnect server.,
-    settings to easily change config
+                connection.message = """Different port other than 1998 use (:), 
+    @ for localhost. 
+    auto_return to enable
     More info Check the Github README
     """
 
             elif ip == "credits":
-                message = f"""
+                connection.message = f"""
     Credits
         {colour("Programing", "green")} - {colour("Peter Cakebread", "blue")}
         {colour("Testing", "light_magenta")} - {colour("Reuben D", "light_blue")}
@@ -250,10 +291,18 @@ def handle_connection(connection):
                 """
 
             elif ip == "settings":
-                message = settings_menu()
+                connection.message = 'Feature Disabled'
+
+            elif ip == 'auto_return':
+                if connection.auto_return:
+                    connection.auto_return = False
+                    connection.message = 'Auto return enabled'
+                else:
+                    connection.auto_return = True
+                    connection.message = 'Auto return disabled'
 
             elif ip[len(ip) - 1] == ':':
-                message = "Port not specified"
+                connection.message = "Port not specified"
 
             elif len(server) == 2:
 
@@ -270,7 +319,11 @@ def handle_connection(connection):
                 break
 
             elif ip == "exit":
-                exit(1)
+                connection.tn.close()
+            elif ip == "r" or ip == "refresh":
+                pass
+            else:
+                break
 
         try:
 
@@ -284,39 +337,51 @@ def handle_connection(connection):
 
                 Sct.send("ACK".encode())
 
-                if dum_ter(server_rev.split("|"),Sct) is not None:
+                if dum_ter(server_rev.split("|"), Sct, connection) is not None:
                     break
 
-            if load_settings("config.txt")["auto_return"]:
-                print(message)
-                input("Press Enter to continue...")
-            clear()
+            if connection.auto_return:
+                connection.print(connection.message)
+                connection.input("Press Enter to continue...")
+            connection.clear()
         except socket.error as e:
-            print(f"Socket error: {e}")   
+            connection.message = f"Socket error: {e}"
+
+            if connection.auto_return:
+                connection.print(connection.message)
+                connection.input("Press Enter to continue...")
     
     
 
 def start_bbs_server():
-    # Create a Telnet server to listen for incoming connections
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((HOST, PORT))
     server_socket.listen(5)
     print(f"BBS Server running on {HOST}:{PORT}")
 
     while True:
-        # Accept new connections
-        client_socket, client_address = server_socket.accept()
-        print(f"Connection from {client_address}")
-        client_socket.settimeout(10)  # Set timeout for idle connections
+        try:
+            client_socket, client_address = server_socket.accept()
+            print(f"Connection from {client_address}")
+            client_socket.settimeout(10)
 
-        # Use Telnet protocol to handle the communication
-        tn = telnetlib.Telnet()
-        tn.sock = client_socket
+            tn = telnetlib.Telnet()
+            tn.sock = client_socket
 
-        connection = setup_connection(tn, socket)
+            connection = setup_connection(tn, socket)
 
-        # Handle the client interaction
-        handle_connection(connection)
+            # Start and track the client thread
+            client_thread = threading.Thread(
+                target=handle_connection_wrapper,
+                args=(connection,),
+                name=f"Client-{client_address}"
+            )
+            active_connections.append(client_thread)
+            client_thread.start()
+
+        except Exception as e:
+            print("Error:", e)
+
 
 if __name__ == '__main__':
     start_bbs_server()

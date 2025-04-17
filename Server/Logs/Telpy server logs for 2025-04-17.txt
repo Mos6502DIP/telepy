@@ -1,0 +1,36 @@
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2025-04-17 08:55:35.449855
+('127.0.0.1', 54207) has connected to server at 2025-04-17 08:55:54.143272
+('127.0.0.1', 54207) has disconnected from the server at 2025-04-17 08:56:05.781238
+('127.0.0.1', 54306) has connected to server at 2025-04-17 08:59:12.383197
+('127.0.0.1', 54622) has connected to server at 2025-04-17 09:09:28.844338
+('127.0.0.1', 54646) has connected to server at 2025-04-17 09:10:07.917148
+('127.0.0.1', 54673) has connected to server at 2025-04-17 09:10:58.745917
+('127.0.0.1', 55096) has connected to server at 2025-04-17 09:23:54.931066
+('127.0.0.1', 55128) has connected to server at 2025-04-17 09:25:21.687934
+('127.0.0.1', 55128) has disconnected from the server at 2025-04-17 09:25:52.567233
+('127.0.0.1', 55275) has connected to server at 2025-04-17 09:27:20.079489
+('127.0.0.1', 55275) has disconnected from the server at 2025-04-17 09:30:01.690681
+('127.0.0.1', 56128) has connected to server at 2025-04-17 09:54:19.547618
+('127.0.0.1', 56128) has disconnected from the server at 2025-04-17 09:54:29.107720
+('127.0.0.1', 56217) has connected to server at 2025-04-17 09:56:40.330016
+('127.0.0.1', 58265) has connected to server at 2025-04-17 11:02:33.862382
+('127.0.0.1', 58265) has disconnected from the server at 2025-04-17 11:03:14.954486
+('127.0.0.1', 58571) has connected to server at 2025-04-17 11:10:00.144641
+('127.0.0.1', 58572) has connected to server at 2025-04-17 11:10:02.349023
+('127.0.0.1', 58970) has connected to server at 2025-04-17 11:17:47.048896
+('127.0.0.1', 58979) has connected to server at 2025-04-17 11:18:20.480499
+('127.0.0.1', 59385) has connected to server at 2025-04-17 11:29:16.146524
+('127.0.0.1', 60656) has connected to server at 2025-04-17 12:01:35.088377
+('127.0.0.1', 60682) has connected to server at 2025-04-17 12:02:29.315664
+('127.0.0.1', 60723) has connected to server at 2025-04-17 12:03:41.097368
+('127.0.0.1', 60749) has connected to server at 2025-04-17 12:04:25.103609
+('127.0.0.1', 60812) has connected to server at 2025-04-17 12:05:59.628655
+('127.0.0.1', 60836) has connected to server at 2025-04-17 12:06:57.711384
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2025-04-17 13:51:55.277662
+('127.0.0.1', 60432) has connected to server at 2025-04-17 13:51:57.358762
+('127.0.0.1', 62214) has connected to server at 2025-04-17 14:24:02.479580
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2025-04-17 14:29:28.338400
+('127.0.0.1', 62768) has connected to server at 2025-04-17 14:32:49.627252

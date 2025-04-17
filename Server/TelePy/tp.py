@@ -9,7 +9,7 @@ buffer = 0
 
 def setting(setting: str):
 
-    with open("server_config.txt") as fp:
+    with open("config.txt") as fp:
         lines = fp.readlines()
         for line in lines:
             if line.strip()[0] != "#":

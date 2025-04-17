@@ -1,6 +1,8 @@
 from TelePy import tp as tp
+import os
 import threading  # This is use for multiple clients
 
+os.chdir(os.path.dirname(os.path.abspath(__file__))) #Fixes issues with working directory
 
 def clientside(client):  # Function contain the client code just parse the client object
 

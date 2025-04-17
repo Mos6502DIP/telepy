@@ -3,6 +3,9 @@ import threading
 import datetime
 import time
 from os.path import join
+import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__))) #Fixes issues with working directory
 
 
 def screen_generate(x, y, char):
@@ -80,11 +83,12 @@ def clientside(client):
         client.print(f"Normal input:{user_input} Password input:{password} Hidden input:{hidden}")
     txt(client,"Test")
 
+    client.input('Pause Press enter to continue')
     # Remote Commands test
     client.print("Weather")
 
     client.weather()
-
+    client.input('Pause Press enter to continue')
     client.print("Colour test!")
 
     colours = ["black", "red", "green", "yellow", "blue", "magenta", "cyan",
@@ -95,6 +99,7 @@ def clientside(client):
         for colour in colours:
             colour_data = [colour, bg_colour]
             client.printc(f"Telepy 2024 (Foreground colour {colour}, Background colour {bg_colour} )", colour_data)
+        client.input('Pause Press enter to continue')
 
     # 2d array test
     client.print("array test!")
@@ -104,7 +109,7 @@ def clientside(client):
     print(screen)
 
     client.print2d(screen)
-
+    client.input('Pause Press enter to continue')
 
     client.print("Colour array test!")
 

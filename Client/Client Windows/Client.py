@@ -322,10 +322,11 @@ P'   MM   `7      MM                MM   `MM.
 
                     ip = server[0]
                     if ip == "@":
-                        ip = "127.0.0.1"
-
+                            ip = "127.0.0.1"
                     port = int(server[1])
                     break
+                if ip == "@":
+                            ip = "127.0.0.1"
                 break
             else:
                 message = "No default server specified (enter settings to change default server)"
