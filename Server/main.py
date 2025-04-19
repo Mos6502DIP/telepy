@@ -83,7 +83,7 @@ def clientside(client):
         client.print(f"Normal input:{user_input} Password input:{password} Hidden input:{hidden}")
     txt(client,"Test")
 
-    client.input('Pause Press enter to continue')
+    client.input('Pause Press enter to continue :>')
     # Remote Commands test
     client.print("Weather")
 

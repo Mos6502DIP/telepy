@@ -1,0 +1,10 @@
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2025-04-19 05:43:32.688926
+('127.0.0.1', 58352) has connected to server at 2025-04-19 05:48:18.559677
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2025-04-19 05:49:48.048336
+('127.0.0.1', 58388) has connected to server at 2025-04-19 05:49:54.453756
+('127.0.0.1', 58446) has connected to server at 2025-04-19 05:51:34.718161
+('127.0.0.1', 58543) has connected to server at 2025-04-19 05:53:40.804593
+('127.0.0.1', 58543) has disconnected from the server at 2025-04-19 05:54:00.693965
+('127.0.0.1', 58613) has connected to server at 2025-04-19 05:55:47.996172

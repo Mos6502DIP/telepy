@@ -34,3 +34,61 @@ Starting server at 2025-04-17 13:51:55.277662
 Tele py server started on port:1998 and listening for 120 Clients!
 Starting server at 2025-04-17 14:29:28.338400
 ('127.0.0.1', 62768) has connected to server at 2025-04-17 14:32:49.627252
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2025-04-17 16:05:46.700327
+('127.0.0.1', 61113) has connected to server at 2025-04-17 16:06:07.149113
+('127.0.0.1', 61296) has connected to server at 2025-04-17 16:11:08.435408
+Tele py server started on port:1998 and listening for 120 Clients!
+Starting server at 2025-04-17 16:15:54.728255
+('127.0.0.1', 61459) has connected to server at 2025-04-17 16:16:01.079517
+('127.0.0.1', 61565) has connected to server at 2025-04-17 16:19:06.489897
+('127.0.0.1', 53884) has connected to server at 2025-04-18 18:12:58.140771
+('127.0.0.1', 54721) has connected to server at 2025-04-18 18:32:29.499787
+('127.0.0.1', 54801) has connected to server at 2025-04-18 18:34:43.289777
+('127.0.0.1', 58284) has connected to server at 2025-04-18 19:43:30.457382
+('127.0.0.1', 59256) has connected to server at 2025-04-18 19:57:37.356660
+('127.0.0.1', 59306) has connected to server at 2025-04-18 19:58:55.221089
+('127.0.0.1', 59317) has connected to server at 2025-04-18 19:59:05.672530
+('127.0.0.1', 59370) has connected to server at 2025-04-18 20:01:15.199306
+('127.0.0.1', 59381) has connected to server at 2025-04-18 20:01:35.326579
+('127.0.0.1', 59415) has connected to server at 2025-04-18 20:02:23.275575
+('127.0.0.1', 59381) has disconnected from the server at 2025-04-18 20:02:58.005023
+('127.0.0.1', 59468) has connected to server at 2025-04-18 20:03:49.399062
+('127.0.0.1', 59468) has disconnected from the server at 2025-04-18 20:04:14.103543
+('127.0.0.1', 59480) has connected to server at 2025-04-18 20:04:56.324879
+('127.0.0.1', 59480) has disconnected from the server at 2025-04-18 20:05:19.611532
+('127.0.0.1', 59540) has connected to server at 2025-04-18 20:07:15.892128
+('127.0.0.1', 59597) has connected to server at 2025-04-18 20:08:35.520409
+('127.0.0.1', 59597) has disconnected from the server at 2025-04-18 20:09:32.622703
+('127.0.0.1', 59749) has connected to server at 2025-04-18 20:12:32.873997
+('127.0.0.1', 59946) has connected to server at 2025-04-18 20:16:32.685360
+('127.0.0.1', 60005) has connected to server at 2025-04-18 20:18:16.182491
+('127.0.0.1', 60005) has disconnected from the server at 2025-04-18 20:18:26.740830
+('127.0.0.1', 60009) has connected to server at 2025-04-18 20:18:26.770651
+('127.0.0.1', 60009) has disconnected from the server at 2025-04-18 20:18:27.470000
+('127.0.0.1', 60010) has connected to server at 2025-04-18 20:18:27.510393
+('127.0.0.1', 60010) has disconnected from the server at 2025-04-18 20:18:28.190605
+('127.0.0.1', 60011) has connected to server at 2025-04-18 20:18:28.232332
+('127.0.0.1', 60011) has disconnected from the server at 2025-04-18 20:18:28.914344
+('127.0.0.1', 60012) has connected to server at 2025-04-18 20:18:28.970568
+('127.0.0.1', 60012) has disconnected from the server at 2025-04-18 20:18:29.638715
+('127.0.0.1', 60013) has connected to server at 2025-04-18 20:18:29.683073
+('127.0.0.1', 60013) has disconnected from the server at 2025-04-18 20:18:30.368028
+('127.0.0.1', 60014) has connected to server at 2025-04-18 20:18:30.414925
+('127.0.0.1', 60014) has disconnected from the server at 2025-04-18 20:18:31.096554
+('127.0.0.1', 60015) has connected to server at 2025-04-18 20:18:31.135957
+('127.0.0.1', 60015) has disconnected from the server at 2025-04-18 20:18:31.817832
+('127.0.0.1', 60016) has connected to server at 2025-04-18 20:18:31.862791
+('127.0.0.1', 60016) has disconnected from the server at 2025-04-18 20:18:32.545884
+('127.0.0.1', 60017) has connected to server at 2025-04-18 20:18:32.576978
+('127.0.0.1', 60017) has disconnected from the server at 2025-04-18 20:18:34.240305
+('127.0.0.1', 60154) has connected to server at 2025-04-18 20:22:40.834887
+('127.0.0.1', 60154) has disconnected from the server at 2025-04-18 20:24:07.221701
+('127.0.0.1', 60282) has connected to server at 2025-04-18 20:26:19.824897
+('127.0.0.1', 60282) has disconnected from the server at 2025-04-18 20:26:41.361521
+('127.0.0.1', 60303) has connected to server at 2025-04-18 20:26:52.067186
+('127.0.0.1', 60303) has disconnected from the server at 2025-04-18 20:26:57.472016
+('127.0.0.1', 60350) has connected to server at 2025-04-18 20:28:04.690761
+('127.0.0.1', 60350) has disconnected from the server at 2025-04-18 20:28:47.582595
+('127.0.0.1', 61224) has connected to server at 2025-04-18 20:53:49.306586
+('127.0.0.1', 61269) has connected to server at 2025-04-18 20:55:08.263206

@@ -43,24 +43,31 @@ class setup_connection():
         self.tn.write(b"\033[2J")
 
     def input(self, string):
-        self.tn.sock.sendall(IAC + DONT + ECHO)
-        self.tn.write(f'{string}'.encode())
-        user_string = self.tn.read_until(b"\r\n").decode('utf-8').strip()
-        self.tn.write(b'\r\n')
+        try:
+            # Try to re-enable local echo just in case
+            self.tn.sock.sendall(IAC + DO + ECHO)
+            
+            # Some terminals respond to ANSI reset for echo
+            self.tn.write(b'\033[12h')  # ANSI: Local echo ON
+        except:
+            pass
 
-        return user_string
+        self.tn.write(f'{string}'.encode())
+        return self.tn.read_until(b"\r\n").decode('utf-8').strip()
     
     def hidden_input(self, string):
-        self.tn.write(string)
-        self.socket.sendall(IAC + WONT + ECHO)  # Disable echo (client stops echoing)
-        
-        data = b''
-        while not data.endswith(b'\r\n'):
-            data += self.socket.recv(1)
+        self.tn.write(f'{string}'.encode())
 
-        self.socket.sendall(IAC + WILL + ECHO)  # Re-enable echo
-        self.tn.write('\r\n')
-        return data.decode().strip()
+        try:
+            self.tn.sock.sendall(IAC + WONT + ECHO)
+            self.tn.write(b'\033[12l')  # ANSI: Local echo OFF
+            user_string = self.tn.read_until(b"\r\n").decode('utf-8').strip()
+        finally:
+            self.tn.sock.sendall(IAC + DO + ECHO)
+            self.tn.write(b'\033[12h')  # ANSI: Local echo ON
+            self.tn.write(b'\r\n')
+
+        return user_string
 
     
     def print_no_new_line(self, string):
@@ -204,7 +211,6 @@ def dum_ter(server, cSct, connection):
                     char, fg_color, bg_color = item
                     # connection.print the character with the specified foreground and background colors
                     connection.print_no_new_line(colour(char, fg_color, bg_color))
-                
                 connection.new_line()
                 
             return None
@@ -379,7 +385,7 @@ def start_bbs_server():
 
             tn = telnetlib.Telnet()
             tn.sock = client_socket
-            tn.sock.sendall(IAC + DONT + ECHO)
+
             connection = setup_connection(tn, socket)
 
             # Start and track the client thread
