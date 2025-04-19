@@ -43,32 +43,20 @@ class setup_connection():
         self.tn.write(b"\033[2J")
 
     def input(self, string):
-        try:
-            # Try to re-enable local echo just in case
-            self.tn.sock.sendall(IAC + DO + ECHO)
-            
-            # Some terminals respond to ANSI reset for echo
-            self.tn.write(b'\033[12h')  # ANSI: Local echo ON
-        except:
-            pass
-
         self.tn.write(f'{string}'.encode())
         return self.tn.read_until(b"\r\n").decode('utf-8').strip()
     
     def hidden_input(self, string):
-        self.tn.write(f'{string}'.encode())
+        self.tn.write(string.encode())
+        user_input = self.tn.read_until(b"\r\n").decode('utf-8').strip()
 
-        try:
-            self.tn.sock.sendall(IAC + WONT + ECHO)
-            self.tn.write(b'\033[12l')  # ANSI: Local echo OFF
-            user_string = self.tn.read_until(b"\r\n").decode('utf-8').strip()
-        finally:
-            self.tn.sock.sendall(IAC + DO + ECHO)
-            self.tn.write(b'\033[12h')  # ANSI: Local echo ON
-            self.tn.write(b'\r\n')
+        # Overwrite line with asterisks or clear it
+        erase_line = '\r' + ' ' * (len(string) + len(user_input)) + '\r'
+        self.tn.write(b'\033[1A')
+        self.tn.write(erase_line.encode())
+        self.tn.write(f'{string}{"*" * len(user_input)}\r\n'.encode())
 
-        return user_string
-
+        return user_input
     
     def print_no_new_line(self, string):
         self.tn.write(f'{string}'.encode())
