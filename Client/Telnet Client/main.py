@@ -43,25 +43,20 @@ class setup_connection():
         self.tn.write(b"\033[2J")
 
     def input(self, string):
-        self.tn.sock.sendall(IAC + DONT + ECHO)
         self.tn.write(f'{string}'.encode())
-        user_string = self.tn.read_until(b"\r\n").decode('utf-8').strip()
-        self.tn.write(b'\r\n')
-
-        return user_string
+        return self.tn.read_until(b"\r\n").decode('utf-8').strip()
     
     def hidden_input(self, string):
-        self.tn.write(string)
-        self.socket.sendall(IAC + WONT + ECHO)  # Disable echo (client stops echoing)
-        
-        data = b''
-        while not data.endswith(b'\r\n'):
-            data += self.socket.recv(1)
+        self.tn.write(string.encode())
+        user_input = self.tn.read_until(b"\r\n").decode('utf-8').strip()
 
-        self.socket.sendall(IAC + WILL + ECHO)  # Re-enable echo
-        self.tn.write('\r\n')
-        return data.decode().strip()
+        # Overwrite line with asterisks or clear it
+        erase_line = '\r' + ' ' * (len(string) + len(user_input)) + '\r'
+        self.tn.write(b'\033[1A')
+        self.tn.write(erase_line.encode())
+        self.tn.write(f'{string}{"*" * len(user_input)}\r\n'.encode())
 
+        return user_input
     
     def print_no_new_line(self, string):
         self.tn.write(f'{string}'.encode())
@@ -379,7 +374,6 @@ def start_bbs_server():
 
             tn = telnetlib.Telnet()
             tn.sock = client_socket
-            tn.sock.sendall(IAC + DONT + ECHO)
             connection = setup_connection(tn, socket)
 
             # Start and track the client thread
