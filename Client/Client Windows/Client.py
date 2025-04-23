@@ -76,8 +76,10 @@ def hash_string(password):
 def load_settings(file):
     try:
         with open(file, "r") as f:
-            return json.load(f)
+            settings = json.load(f)
 
+        for setting in settings:
+            print(setting)
     except FileNotFoundError:
         setup()
 
