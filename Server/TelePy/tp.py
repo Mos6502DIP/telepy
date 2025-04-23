@@ -302,6 +302,29 @@ class Client:
                 print(f"Socket error: {e}")
 
             return None
+        
+    def switch(self, string):
+        try:
+            time.sleep(buffer)
+            self.client.send(bytes(f"15|{string}", "utf-8"))
+
+            acknowledgment = self.client.recv(1024).decode()
+            if acknowledgment != "ACK":
+                print("Error: Client did not acknowledge the message.")
+
+            status = self.client.recv(1024).decode()
+
+            if status == 'switch':
+                self.client.close()
+                print(f"{self.client_ip} has switched from the server at {datetime.datetime.now()} to {string}")
+                return True
+            else:
+                return False
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
+
+            return None
 
     def closet(self, string):
         try:

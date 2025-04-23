@@ -8,11 +8,12 @@ import keyboard
 # Telepy Copyright 2024 Peter Cakebread
 
 
-ver = "1.5"
+ver = "1.8"
 device = "win"
 
 message = ""
 
+ip = ''
 
 def select_weather():
 
@@ -186,6 +187,7 @@ def colour(text, color, background=None):
 
 def dum_ter(server, cSct):
     global message
+    global ip
 
     server_m = server[0]  # the first digit is the mode set by the server.
 
@@ -275,9 +277,17 @@ def dum_ter(server, cSct):
 
         case "15":
             message = data
-            cSct.close()
-            return "exit"
-
+            print(f'Server Switching to {data}')
+            choice =  input("Accept (y/n) :>").lower()
+            if choice == 'y':
+                cSct.send(bytes('switch', "utf-8"))
+                cSct.close()
+                ip = data
+                message = 'server change'
+                return "exit"
+            else:
+                cSct.send(bytes('deny', "utf-8"))
+                return None
         case _:
             print("Out dated client")
             return None
@@ -303,14 +313,21 @@ P'   MM   `7      MM                MM   `MM.
                                                 ,V      
                                              OOb"       
         ''')
-        print(colour("Telepy", "green"), "by", colour("Peter Cakebread", "blue"), f" 2024 v{ver} ({device})")
+        print(colour("Telepy", "green"), "by", colour("Peter Cakebread", "blue"), f" 2025 v{ver} ({device})")
         if message != "":
-            print(message)
+            if message == 'server change':
+                print(f'Server switching to {ip}')
+                
+            else:
+                print(message)
+                message = ""
+
+
+        if message != 'server change':
+            ip = input("Server ip:>")
+
+        else:
             message = ""
-
-
-
-        ip = input("Server ip:>")
         port = 1998
         server = ip.split(":")
 
@@ -369,29 +386,42 @@ Credits
         elif ip == "exit":
             exit(1)
 
+        else:
+            break
+
     try:
-
         mode = 0
-
-        Sct = socket.socket()  # creating the socket
-        Sct.connect((ip, port))  # connecting to the server
+        Sct = socket.socket()
+        Sct.connect((ip, port))
 
         while True:
-            server_rev = Sct.recv(6000).decode()
-
             if keyboard.is_pressed("ESC"):
                 message = "Disconnected by User"
+                Sct.close()
                 break
 
-            Sct.send("ACK".encode())
+            try:
+                server_rev = Sct.recv(6000).decode()
+                if not server_rev:
+                    message = "Server closed connection"
+                    Sct.close()
+                    break
 
-            if dum_ter(server_rev.split("|"),Sct) is not None:
+                Sct.send("ACK".encode())
+                dum_ter_response = dum_ter(server_rev.split("|"), Sct)
+
+                if dum_ter_response == 'exit':
+                    Sct.close()
+                    break
+
+            except socket.error as e:
+                message = f"Socket error inside loop: {e}"
+                try:
+                    Sct.close()
+                except:
+                    pass
                 break
-
-        if load_settings("config.txt")["auto_return"]:
-            print(message)
-            input("Press Enter to continue...")
-        clear()
     except socket.error as e:
-        print(f"Socket error: {e}")
+        message = f"Socket error: {e}"
+
 

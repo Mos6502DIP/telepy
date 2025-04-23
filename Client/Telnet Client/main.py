@@ -5,7 +5,7 @@ from getpass import getpass
 import hashlib
 import json
 import threading  # This is use for multiple clients
-
+import time
 
 # Constants for the BBS System
 HOST = '0.0.0.0'  # Listen on all interfaces
@@ -74,6 +74,13 @@ def online_count():
         if not thread.is_alive():
             active_connections.remove(thread)
     return len(active_connections)
+
+def clean_dead_threads():
+    while True:
+        time.sleep(5)
+        for thread in active_connections[:]:
+            if not thread.is_alive():
+                active_connections.remove(thread)
 
 def hash_string(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -225,14 +232,12 @@ def dum_ter(server, cSct, connection):
             connection.print("Out dated client")
             return None       
 
-def handle_connection_wrapper(connection):
+def handle_connection_wrapper(connection, thread_ref):
     try:
         handle_connection(connection)
     finally:
-        # Remove thread from active list when done
-        current = threading.current_thread()
-        if current in active_connections:
-            active_connections.remove(current)
+        if thread_ref in active_connections:
+            active_connections.remove(thread_ref)
 
 # Function to handle user interaction
 def handle_connection(connection):
@@ -365,7 +370,9 @@ def start_bbs_server():
     server_socket.bind((HOST, PORT))
     server_socket.listen(5)
     print(f"BBS Server running on {HOST}:{PORT}")
-
+    
+    cleanup_thread = threading.Thread(target=clean_dead_threads, daemon=True)
+    cleanup_thread.start()
     while True:
         try:
             client_socket, client_address = server_socket.accept()
@@ -376,12 +383,12 @@ def start_bbs_server():
             tn.sock = client_socket
             connection = setup_connection(tn, socket)
 
-            # Start and track the client thread
             client_thread = threading.Thread(
                 target=handle_connection_wrapper,
-                args=(connection,),
+                args=(connection, None),  # placeholder for now
                 name=f"Client-{client_address}"
             )
+            client_thread._args = (connection, client_thread)  # insert self-reference for cleanup
             active_connections.append(client_thread)
             client_thread.start()
 

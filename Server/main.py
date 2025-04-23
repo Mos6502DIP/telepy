@@ -99,7 +99,7 @@ def clientside(client):
         for colour in colours:
             colour_data = [colour, bg_colour]
             client.printc(f"Telepy 2024 (Foreground colour {colour}, Background colour {bg_colour} )", colour_data)
-        client.input('Pause Press enter to continue')
+        #client.input('Pause Press enter to continue')
 
     # 2d array test
     client.print("array test!")
@@ -118,6 +118,8 @@ def clientside(client):
     client.print2dc(screen)
 
     client.input("Press Enter to continue...")
+
+    client.switch("lucario")
 
     client.closet_log(log_file,f"Disconnected by user!")
 
