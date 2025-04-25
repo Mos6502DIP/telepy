@@ -5,8 +5,9 @@ import os
 import time
 from getpass import getpass
 import keyboard
-# Telepy Copyright 2024 Peter Cakebread
+# Telepy Copyright 2025 Peter Cakebread
 
+v_settings = {'auto_return', 'location', 'default_server', 'switch_consent'} # Ensures that the client settings json is up to date
 
 ver = "1.8"
 device = "win"
@@ -79,7 +80,8 @@ def load_settings(file):
             settings = json.load(f)
 
         for setting in settings:
-            print(setting)
+            if setting not in v_settings:
+                print(f'Setting {setting} Not Found')
     except FileNotFoundError:
         setup()
 
