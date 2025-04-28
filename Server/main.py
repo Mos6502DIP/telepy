@@ -1,4 +1,4 @@
-from Server import TelePy as TelePy
+import TelePy as tp
 import threading
 import datetime
 import time
@@ -76,11 +76,11 @@ def clientside(client):
     client.print("Print test!")
     client.print(f"Version: {c_version}")
     client.print(f"Device Info {d_version}" )
-    if TelePy.setting("telepi_debug") != "True":
-        user_input = client.input("Enter Normal input:>")
-        password = client.password("Enter Password input:>")
-        hidden = client.hidden_input("Enter Hidden input:>")
-        client.print(f"Normal input:{user_input} Password input:{password} Hidden input:{hidden}")
+    
+    user_input = client.input("Enter Normal input:>")
+    password = client.password("Enter Password input:>")
+    hidden = client.hidden_input("Enter Hidden input:>")
+    client.print(f"Normal input:{user_input} Password input:{password} Hidden input:{hidden}")
     txt(client,"Test")
 
     client.input('Pause Press enter to continue :>')
@@ -119,21 +119,27 @@ def clientside(client):
 
     client.input("Press Enter to continue...")
 
+    client.print('Getting Sever Sats')
+    server_info = tp.get_info('127.0.0.1')
+
+    client.print(f'''Name : {server_info['name']}
+Description : {server_info['description']}
+Uptime : {server_info['uptime']}
+Users Online {server_info['online']}
+Icon :
+''')
+    for line in server_info['icon']:
+        client.print(line)
+    client.print(f'Ping:{round(tp.ping("127.0.0.1"), 2)}')
+    client.input("Press Enter to continue...")
     client.switch("lucario")
 
     client.closet_log(log_file,f"Disconnected by user!")
 
 
+if __name__ == '__main__':
+    log_file = join("Logs", f"Telpy server logs for {date()}.txt")  # Change this to your desired file name
 
+    log(log_file, f"Starting server at {time()}")
 
-log_file = join("Logs", f"Telpy server logs for {date()}.txt")  # Change this to your desired file name
-
-Sct = TelePy.setup_log(log_file)
-
-log(log_file, f"Starting server at {time()}")
-
-while True:
-    client_c, add = Sct.accept()
-    TelePy.log(log_file, f"{add} has connected to server at {time()}")
-    client = TelePy.Client(client_c, add)
-    threading._start_new_thread(clientside, (client,))
+    tp.start(clientside, log_file=log_file)  # Starts a server based on the config txt

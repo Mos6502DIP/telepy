@@ -1,0 +1,1 @@
+{"location": "london", "default_server": "server.fractaldev.co", "auto_return": false, "switch_consent": false}

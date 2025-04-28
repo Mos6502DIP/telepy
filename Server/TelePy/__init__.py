@@ -2,7 +2,7 @@ import socket
 import datetime
 import time
 import json
-import sys
+import time
 import threading
 
 
@@ -13,7 +13,9 @@ settings = {}
 active_terminal_clients = set()
 active_terminal_clients_lock = threading.Lock()
 
-def settings():
+start_time = None
+
+def load_config():
     global settings
     with open('config.txt', "r") as f:
         settings = json.load(f)
@@ -48,47 +50,128 @@ def setup_log(log_file):
     log(log_file, f'Tele py server started on port:{ports} and listening for {settings["listen"]} Clients!')
     return Sct
 
-def tele_net():
-    global settings
+def start_uptime():
+    global start_time
+    start_time = time.time()
 
-def handle_connection_wrapper(client_socket, client_address):
-    try:
-        # Your actual connection handling logic here
-        print(f"Handling client {client_address}")
+def get_uptime():
+    global start_time
+    if start_time is None:
+        return "Uptime not started."
+    elapsed_time = time.time() - start_time
+    hours, remainder = divmod(int(elapsed_time), 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{hours}h {minutes}m {seconds}s"
+
+def get_info(server_ip):
+    server = server_ip.split(':')
+    port = 1998
+    if len(server) == 2:
+
+        server_ip = server[0]
+
+        port = int(server[1])
+
+    Sct = socket.socket()
+    Sct.connect((server_ip, port))
+    Sct.send(bytes('json', "utf-8"))
+    server_json = Sct.recv(6000).decode()
+    Sct.close()
+    return json.loads(server_json)
         
-        # Simulating some handling logic (e.g., waiting for data, interacting with the client)
-        data = client_socket.recv(1024).decode().strip()
-        if data:
-            print(f"Received data from {client_address}: {data}")
+def ping(server_ip):
+    server = server_ip.split(':')
+    port = 1998
+    if len(server) == 2:
+
+        server_ip = server[0]
+
+        port = int(server[1])
+
+    try:
+        Sct = socket.socket()
+        Sct.settimeout(5)  # Optional: timeout after a few seconds
+
+        start_time = time.time()
+        Sct.connect((server_ip, port))
+        
+        Sct.send(b'ping')  # Send "ping"
+        
+        response = Sct.recv(1024).decode()
+        end_time = time.time()
+
+        Sct.close()
+
+        if response.strip().lower() == "pong":
+            ping_ms = (end_time - start_time) * 1000  # Convert to milliseconds
+            return ping_ms
         else:
-            print(f"No data received from {client_address}")
+            return None
+
+    except (socket.timeout, socket.error) as e:
+        return None
+
+def handle_client_connection_wrapper(client_side, client):
+    try:
+        print(f"Handling client {client.client_ip}")
+        
+        client_side(client)
 
     finally:
-        # When the connection ends, remove the thread from active clients
+        
         with active_terminal_clients_lock:
             active_terminal_clients.discard(threading.current_thread())
-        print(f"Client {client_address} disconnected. {len(active_terminal_clients)} terminal clients online.")
+        print(f"Client {client.client_ip} disconnected. {len(active_terminal_clients)} terminal clients online.")
+        client.client.close()
+
+
+def handle_ping_connection_wrapper(client_socket):
+    try:
+        client_socket.send(bytes("pong", "utf-8"))
+
+    finally:
+
         client_socket.close()
 
-def start(client_side, log=False, log_file=False):
-    # Socket setup
-    if log:
-        if log_file:
-            sct = setup_log(log_file)
-        else:
-            exit(1)
-    else:
-        sct = setup(log_file)
 
-    # Threading cleanup
-    cleanup_thread = threading.Thread(target=clean_dead_threads, daemon=True)
-    cleanup_thread.start()
+def handle_json_connection_wrapper(client_socket):
+    try:
+        server_info = {
+            'name':settings['server_name'],
+            'description':settings['description'],
+            'icon':settings['icon'],
+            'uptime':get_uptime(),
+            'online':len(active_terminal_clients)
+        }
+            
+        client_socket.send(bytes(json.dumps(server_info), "utf-8"))
+
+    finally:
+
+        client_socket.close()
+
+
+
+def start(client_side, log_file=False):
+    # Loading config
+    load_config()
+
+    # Uptime
+    start_uptime()
+
+    # Socket setup
+    if log_file:
+        sct = setup_log(log_file)
+    else:
+        sct = setup()
+    
+        
     
     # Main server script
     while True:
         client_socket, client_address = sct.accept()
         print(f"Connection from {client_address}")
-        client_socket.settimeout(10)
+        client_socket.settimeout(5)
 
         try:
             # Receive connection type (like 'terminal') from the client
@@ -99,10 +182,11 @@ def start(client_side, log=False, log_file=False):
             continue
 
         if connection_type == 'terminal':
-           
+            client_obj = Client(client_socket, client_address)
+
             client_thread = threading.Thread(
-                target=handle_connection_wrapper,
-                args=(client_side, client_socket, client_address),
+                target=handle_client_connection_wrapper,
+                args=(client_side, client_obj),
                 name=f"TerminalClient-{client_address}"
             )
             client_thread.start()
@@ -111,6 +195,25 @@ def start(client_side, log=False, log_file=False):
                 active_terminal_clients.add(client_thread)
 
             print(f"{len(active_terminal_clients)} terminal clients online.")
+
+        elif connection_type == 'ping':
+
+            ping_thread = threading.Thread(
+                target=handle_ping_connection_wrapper,
+                args=(client_socket, ),
+                name=f"Ping-{client_address}"
+            )
+            ping_thread.start()
+
+        elif connection_type == 'json':
+
+            ping_thread = threading.Thread(
+                target=handle_json_connection_wrapper,
+                args=(client_socket, ),
+                name=f"Json-{client_address}"
+            )
+            ping_thread.start()
+
         else:
             print(f"Unknown connection type '{connection_type}' from {client_address}")
             client_socket.close()
@@ -409,8 +512,3 @@ class Client:
         except socket.error as e:
             if e.errno != 10038 and e.errno != 10054:
                 print(f"Socket error: {e}")
-
-
-
-
-

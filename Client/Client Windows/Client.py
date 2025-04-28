@@ -16,6 +16,35 @@ message = ""
 
 ip = ''
 
+settings = {}
+
+os.chdir(os.path.dirname(os.path.abspath(__file__))) # Fixes issues related to files being incorrect
+
+def ping(server_ip, port):
+    try:
+        Sct = socket.socket()
+        Sct.settimeout(5)  # Optional: timeout after a few seconds
+
+        start_time = time.time()
+        Sct.connect((server_ip, port))
+        
+        Sct.send(b'ping')  # Send "ping"
+        
+        response = Sct.recv(1024).decode()
+        end_time = time.time()
+
+        Sct.close()
+
+        if response.strip().lower() == "pong":
+            ping_ms = (end_time - start_time) * 1000  # Convert to milliseconds
+            return f'Server:{server_ip} Ping:{round(ping_ms, 2)}ms'
+        else:
+            return 'Invalid response'  # Unexpected response
+
+    except (socket.timeout, socket.error) as e:
+        return f"Error: {e}"
+        
+    
 def select_weather():
 
     location = input("Enter Your nearest city this for weather :>")
@@ -63,6 +92,7 @@ def setup():
 Leave blank to select have no default server.:>""")
 
     setup_settings["auto_return"] = False
+    setup_settings['switch_consent'] = False
 
     write_settings("config.txt", setup_settings)
 
@@ -75,6 +105,7 @@ def hash_string(password):
 
 
 def load_settings(file):
+    global settings
     try:
         with open(file, "r") as f:
             settings = json.load(f)
@@ -82,6 +113,8 @@ def load_settings(file):
         for setting in settings:
             if setting not in v_settings:
                 print(f'Setting {setting} Not Found')
+                input(f'Setup Will now start')
+                setup()
     except FileNotFoundError:
         setup()
 
@@ -192,6 +225,7 @@ def colour(text, color, background=None):
 def dum_ter(server, cSct):
     global message
     global ip
+    global settings
 
     server_m = server[0]  # the first digit is the mode set by the server.
 
@@ -235,7 +269,7 @@ def dum_ter(server, cSct):
             return None
 
         case "7":
-            os.system(f'curl wttr.in/{load_settings("config.txt")["location"]}')
+            os.system(f'curl wttr.in/{settings["location"]}')
             return None
 
         case "8":
@@ -297,13 +331,13 @@ def dum_ter(server, cSct):
             return None
 
 
-settings = load_settings("config.txt")
+load_settings("config.txt")
 clear()
 
 while True:
 
     while True:
-        settings = load_settings("config.txt")
+        
         clear()
         print('''                                                      
                   ,,                                    
@@ -334,7 +368,7 @@ P'   MM   `7      MM                MM   `MM.
             message = ""
         port = 1998
         server = ip.split(":")
-
+        commands = ip.split(" ")
         if ip == "":
             ip = settings["default_server"]
             server = ip.split(":")
@@ -389,6 +423,20 @@ Credits
 
         elif ip == "exit":
             exit(1)
+
+        elif commands[0] == 'ping':
+            if len(commands) == 2:
+                server_ip = commands[1]
+                server = server_ip.split(':')
+                port = 1998
+                if len(server) == 2:
+
+                    server_ip = server[0]
+
+                    port = int(server[1])
+                message = ping(server_ip, port)
+            else:
+                message = 'Invalid ping command.'
 
         else:
             break
