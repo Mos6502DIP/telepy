@@ -3,19 +3,20 @@ import datetime
 import time
 import json
 import sys
+import threading
+
 
 buffer = 0
 
+settings = {}
 
-def setting(setting: str):
+active_terminal_clients = set()
+active_terminal_clients_lock = threading.Lock()
 
-    with open("config.txt") as fp:
-        lines = fp.readlines()
-        for line in lines:
-            if line.strip()[0] != "#":
-                setting_line = line.strip().split("=")
-                if setting_line[0] == setting:
-                    return setting_line[1]
+def settings():
+    global settings
+    with open('config.txt', "r") as f:
+        settings = json.load(f)
 
 
 def test():
@@ -29,23 +30,91 @@ def log(filename, text):
 
 
 def setup():
-
+    global settings
     Sct = socket.socket()  # creating the socket
-    ports = int(setting("port"))
+    ports = settings["port"]
     Sct.bind(("", int(ports)))  # Bind port
-    Sct.listen(int(setting("listen")))  # listens for clients
-    print(f'Tele py server started on port:{ports} and listening for {setting("listen")} Clients!')
+    Sct.listen(settings["listen"])  # listens for clients
+    print(f'Tele py server started on port:{ports} and listening for {settings["listen"]} Clients!')
     return Sct
 
 
 def setup_log(log_file):
-
+    global settings
     Sct = socket.socket()  # creating the socket
-    ports = setting("port")
+    ports = settings["port"]
     Sct.bind(("", int(ports)))  # Bind port
-    Sct.listen(int(setting("listen")))  # listens for clients
-    log(log_file, f'Tele py server started on port:{ports} and listening for {setting("listen")} Clients!')
+    Sct.listen(settings["listen"])  # listens for clients
+    log(log_file, f'Tele py server started on port:{ports} and listening for {settings["listen"]} Clients!')
     return Sct
+
+def tele_net():
+    global settings
+
+def handle_connection_wrapper(client_socket, client_address):
+    try:
+        # Your actual connection handling logic here
+        print(f"Handling client {client_address}")
+        
+        # Simulating some handling logic (e.g., waiting for data, interacting with the client)
+        data = client_socket.recv(1024).decode().strip()
+        if data:
+            print(f"Received data from {client_address}: {data}")
+        else:
+            print(f"No data received from {client_address}")
+
+    finally:
+        # When the connection ends, remove the thread from active clients
+        with active_terminal_clients_lock:
+            active_terminal_clients.discard(threading.current_thread())
+        print(f"Client {client_address} disconnected. {len(active_terminal_clients)} terminal clients online.")
+        client_socket.close()
+
+def start(client_side, log=False, log_file=False):
+    # Socket setup
+    if log:
+        if log_file:
+            sct = setup_log(log_file)
+        else:
+            exit(1)
+    else:
+        sct = setup(log_file)
+
+    # Threading cleanup
+    cleanup_thread = threading.Thread(target=clean_dead_threads, daemon=True)
+    cleanup_thread.start()
+    
+    # Main server script
+    while True:
+        client_socket, client_address = sct.accept()
+        print(f"Connection from {client_address}")
+        client_socket.settimeout(10)
+
+        try:
+            # Receive connection type (like 'terminal') from the client
+            connection_type = client_socket.recv(1024).decode().strip()
+        except socket.timeout:
+            print(f"Timeout from {client_address}")
+            client_socket.close()
+            continue
+
+        if connection_type == 'terminal':
+           
+            client_thread = threading.Thread(
+                target=handle_connection_wrapper,
+                args=(client_side, client_socket, client_address),
+                name=f"TerminalClient-{client_address}"
+            )
+            client_thread.start()
+
+            with active_terminal_clients_lock:
+                active_terminal_clients.add(client_thread)
+
+            print(f"{len(active_terminal_clients)} terminal clients online.")
+        else:
+            print(f"Unknown connection type '{connection_type}' from {client_address}")
+            client_socket.close()
+
 
 class Client:
 

@@ -1,4 +1,4 @@
-from TelePy import tp as tp
+from Server import TelePy as TelePy
 import threading
 import datetime
 import time
@@ -76,7 +76,7 @@ def clientside(client):
     client.print("Print test!")
     client.print(f"Version: {c_version}")
     client.print(f"Device Info {d_version}" )
-    if tp.setting("telepi_debug") != "True":
+    if TelePy.setting("telepi_debug") != "True":
         user_input = client.input("Enter Normal input:>")
         password = client.password("Enter Password input:>")
         hidden = client.hidden_input("Enter Hidden input:>")
@@ -128,12 +128,12 @@ def clientside(client):
 
 log_file = join("Logs", f"Telpy server logs for {date()}.txt")  # Change this to your desired file name
 
-Sct = tp.setup_log(log_file)
+Sct = TelePy.setup_log(log_file)
 
 log(log_file, f"Starting server at {time()}")
 
 while True:
     client_c, add = Sct.accept()
-    tp.log(log_file, f"{add} has connected to server at {time()}")
-    client = tp.Client(client_c, add)
+    TelePy.log(log_file, f"{add} has connected to server at {time()}")
+    client = TelePy.Client(client_c, add)
     threading._start_new_thread(clientside, (client,))

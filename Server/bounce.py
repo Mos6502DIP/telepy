@@ -1,4 +1,4 @@
-from TelePy import tp as tp
+from Server import TelePy as TelePy
 import threading  # This is use for multiple clients
 
 
@@ -9,10 +9,10 @@ def clientside(client):  # Function contain the client code just parse the clien
     client.switch('@')  # Disconnects the user
 
 
-Sct = tp.setup()  # Creates a socket
+Sct = TelePy.setup()  # Creates a socket
 
 while True:
     client_c, add = Sct.accept()
     print(f"{add} has connected to server.")
-    client = tp.Client(client_c, add)
+    client = TelePy.Client(client_c, add)
     threading._start_new_thread(clientside, (client,))

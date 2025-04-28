@@ -397,7 +397,7 @@ Credits
         mode = 0
         Sct = socket.socket()
         Sct.connect((ip, port))
-
+        Sct.send(bytes('terminal', "utf-8")) # Tells the server it wants a terminal
         while True:
             if keyboard.is_pressed("ESC"):
                 message = "Disconnected by User"

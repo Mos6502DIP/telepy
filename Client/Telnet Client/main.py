@@ -385,10 +385,10 @@ def start_bbs_server():
 
             client_thread = threading.Thread(
                 target=handle_connection_wrapper,
-                args=(connection, None),  # placeholder for now
+                args=(connection, None),
                 name=f"Client-{client_address}"
             )
-            client_thread._args = (connection, client_thread)  # insert self-reference for cleanup
+            client_thread._args = (connection, client_thread)
             active_connections.append(client_thread)
             client_thread.start()
 
