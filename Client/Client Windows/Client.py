@@ -67,7 +67,7 @@ def select_weather():
 
 def setup():
     global message
-
+    global settings
     os.system('cls' if os.name == 'nt' else 'clear')
     print("No config file detected")
     print(colour("""
@@ -95,7 +95,7 @@ Leave blank to select have no default server.:>""")
     setup_settings['switch_consent'] = False
 
     write_settings("config.txt", setup_settings)
-
+    setup_settings = settings
     message = f"Welcome to Tele Py :3"
     input("Saved! Press Enter to continue you can changes these at anytime just enter `settings` at the prompt...")
 
@@ -129,8 +129,9 @@ def clear():
 
 
 def settings_menu():
+    global settings
     clear()
-    settings_temp = load_settings("config.txt")
+    settings_temp = settings
     logo = """                                                                  
  ███████╗███████╗████████╗████████╗██╗███╗   ██╗ ██████╗ ███████╗ 
  ██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██║████╗  ██║██╔════╝ ██╔════╝ 
@@ -148,7 +149,8 @@ Settings Menu (use numbers to navigate, Enter to select)
 1. Weather Location : {settings_temp["location"]}
 2. Default Server : {settings_temp["default_server"]}
 3. Auto-Return : {settings_temp["auto_return"]}
-4. Save and exit
+4. Switch Concent : {settings_temp['switch_consent']}
+5. Save and exit
         """)
 
     update_menu()
@@ -164,8 +166,13 @@ Settings Menu (use numbers to navigate, Enter to select)
         elif choice == "3":
 
             settings_temp["auto_return"] = not settings_temp["auto_return"]
+
         elif choice == "4":
+
+            settings_temp["switch_consent"] = not settings_temp["switch_consent"]
+        elif choice == "5":
             write_settings("config.txt", settings_temp)
+            settings = settings_temp
             print("Settings Saved.")
             return "Settings saved"
         else:
@@ -316,16 +323,23 @@ def dum_ter(server, cSct):
         case "15":
             message = data
             print(f'Server Switching to {data}')
-            choice =  input("Accept (y/n) :>").lower()
-            if choice == 'y':
+            if settings['switch_consent']:
                 cSct.send(bytes('switch', "utf-8"))
                 cSct.close()
                 ip = data
                 message = 'server change'
                 return "exit"
             else:
-                cSct.send(bytes('deny', "utf-8"))
-                return None
+                choice =  input("Accept (y/n) :>").lower()
+                if choice == 'y':
+                    cSct.send(bytes('switch', "utf-8"))
+                    cSct.close()
+                    ip = data
+                    message = 'server change'
+                    return "exit"
+                else:
+                    cSct.send(bytes('deny', "utf-8"))
+                    return None
         case _:
             print("Out dated client")
             return None
@@ -333,7 +347,7 @@ def dum_ter(server, cSct):
 
 load_settings("config.txt")
 clear()
-
+load_settings("config.txt")
 while True:
 
     while True:
@@ -388,8 +402,10 @@ P'   MM   `7      MM                MM   `MM.
 
         elif ip == "help":
             message = """Different port other than 1998 use (:), 
-@ for localhost. Also Esc to stop and disconnect server.,
-settings to easily change config
+@ for localhost. Esc to stop and disconnect server.,
+Settings to easily change config
+ping to get server response time eg (ping example.com)
+info to get server info eg (info example.com)
 More info Check the Github README
 """
 
@@ -397,7 +413,7 @@ More info Check the Github README
             message = f"""
 Credits
     {colour("Programing", "green")} - {colour("Peter Cakebread", "blue")}
-    {colour("Testing", "light_magenta")} - {colour("Reuben D", "light_blue")}
+    {colour("Testing", "light_magenta")} - {colour("Devcat2001", "light_blue")}
     {colour("Weather (wttr.in)", "yellow")} - {colour("igor_chubin", "light-cyan")}    
             """
 
@@ -425,6 +441,20 @@ Credits
             exit(1)
 
         elif commands[0] == 'ping':
+            if len(commands) == 2:
+                server_ip = commands[1]
+                server = server_ip.split(':')
+                port = 1998
+                if len(server) == 2:
+
+                    server_ip = server[0]
+
+                    port = int(server[1])
+                message = ping(server_ip, port)
+            else:
+                message = 'Invalid ping command.'
+
+        elif commands[0] == 'info':
             if len(commands) == 2:
                 server_ip = commands[1]
                 server = server_ip.split(':')

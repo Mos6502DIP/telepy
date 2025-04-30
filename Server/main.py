@@ -132,7 +132,7 @@ Icon :
         client.print(line)
     client.print(f'Ping:{round(tp.ping("127.0.0.1"), 2)}')
     client.input("Press Enter to continue...")
-    client.switch("lucario")
+    client.switch("server.fractaldev.co")
 
     client.closet_log(log_file,f"Disconnected by user!")
 
