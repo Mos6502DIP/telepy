@@ -126,8 +126,7 @@ def clientside(client):
 Description : {server_info['description']}
 Uptime : {server_info['uptime']}
 Users Online {server_info['online']}
-Icon :
-''')
+Icon :''')
     for line in server_info['icon']:
         client.print(line)
     client.print(f'Ping:{round(tp.ping("127.0.0.1"), 2)}')

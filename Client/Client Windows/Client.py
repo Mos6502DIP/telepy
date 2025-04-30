@@ -20,6 +20,24 @@ settings = {}
 
 os.chdir(os.path.dirname(os.path.abspath(__file__))) # Fixes issues related to files being incorrect
 
+def info(server_ip, port):
+    try:
+        Sct = socket.socket()
+        Sct.connect((server_ip, port))
+        Sct.send(bytes('json', "utf-8"))
+        server_info = json.loads(Sct.recv(6000).decode())
+        Sct.close()
+        output = f'''Name : {server_info['name']}
+Description : {server_info['description']}
+Uptime : {server_info['uptime']}
+Users Online {server_info['online']}
+Icon :'''
+        for line in server_info['icon']:
+            output += f'\n{line}'
+
+        return output
+    except (socket.timeout, socket.error) as e:
+        return f"Error: {e}"
 def ping(server_ip, port):
     try:
         Sct = socket.socket()
@@ -381,93 +399,100 @@ P'   MM   `7      MM                MM   `MM.
         else:
             message = ""
         port = 1998
-        server = ip.split(":")
+        ip = ip.strip()
         commands = ip.split(" ")
+        server = ip.split(":")
+
+        # If input is empty, use default server
         if ip == "":
-            ip = settings["default_server"]
-            server = ip.split(":")
-            if ip != "":
-                if len(server) == 2:
-
-                    ip = server[0]
-                    if ip == "@":
-                            ip = "127.0.0.1"
-                    port = int(server[1])
-                    break
-                if ip == "@":
-                            ip = "127.0.0.1"
-                break
-            else:
+            ip = settings.get("default_server", "")
+            if not ip:
                 message = "No default server specified (enter settings to change default server)"
+            else:
+                server = ip.split(":")
+                if len(server) == 2:
+                    ip, port_str = server
+                    ip = "127.0.0.1" if ip == "@" else ip
+                    port = int(port_str)
+                elif ip == "@":
+                    ip = "127.0.0.1"
+            break
 
+        # Info command
+        elif commands[0] == "info":
+            if len(commands) == 2:
+                target = commands[1]
+                parts = target.split(':')
+                server_ip = parts[0]
+                port = int(parts[1]) if len(parts) == 2 else 1998
+                message = info(server_ip, port)
+            else:
+                message = 'Invalid info command.'
+
+        # Ping command
+        elif commands[0] == "ping":
+            if len(commands) == 2:
+                target = commands[1]
+                if ':' in target:
+                    server_ip, port_str = target.split(':', 1)
+                    port = int(port_str)
+                else:
+                    server_ip = target
+                    port = 1998
+
+                if not server_ip:
+                    message = 'Invalid IP address.'
+                else:
+                    message = ping(server_ip, port)
+            else:
+                message = 'Invalid ping command.'
+
+        # Help command
         elif ip == "help":
-            message = """Different port other than 1998 use (:), 
-@ for localhost. Esc to stop and disconnect server.,
-Settings to easily change config
-ping to get server response time eg (ping example.com)
-info to get server info eg (info example.com)
-More info Check the Github README
-"""
+            message = (
+                "Different port other than 1998 use (:),\n"
+                "@ for localhost. Esc to stop and disconnect server.\n"
+                "Settings to easily change config\n"
+                "ping to get server response time eg (ping example.com)\n"
+                "info to get server info eg (info example.com)\n"
+                "More info: Check the Github README"
+            )
 
+        # Credits command
         elif ip == "credits":
             message = f"""
-Credits
-    {colour("Programing", "green")} - {colour("Peter Cakebread", "blue")}
-    {colour("Testing", "light_magenta")} - {colour("Devcat2001", "light_blue")}
-    {colour("Weather (wttr.in)", "yellow")} - {colour("igor_chubin", "light-cyan")}    
+        Credits
+            {colour("Programing", "green")} - {colour("Peter Cakebread", "blue")}
+            {colour("Testing", "light_magenta")} - {colour("Devcat2001", "light_blue")}
+            {colour("Weather (wttr.in)", "yellow")} - {colour("igor_chubin", "light-cyan")}    
             """
 
+        # Settings command
         elif ip == "settings":
             message = settings_menu()
 
-        elif ip[len(ip) - 1] == ':':
+        # Catch missing port after colon
+        elif ip.endswith(":"):
             message = "Port not specified"
 
+        # Handle raw IP:PORT
         elif len(server) == 2:
-
-            ip = server[0]
-            if ip == "@":
-                ip = "127.0.0.1"
-
-            port = int(server[1])
+            ip, port_str = server
+            ip = "127.0.0.1" if ip == "@" else ip
+            port = int(port_str)
             break
 
-        elif server[0] == "@":
-
+        # Handle shorthand localhost
+        elif ip == "@":
             ip = "127.0.0.1"
             break
 
+        # Exit command
         elif ip == "exit":
             exit(1)
 
-        elif commands[0] == 'ping':
-            if len(commands) == 2:
-                server_ip = commands[1]
-                server = server_ip.split(':')
-                port = 1998
-                if len(server) == 2:
 
-                    server_ip = server[0]
-
-                    port = int(server[1])
-                message = ping(server_ip, port)
-            else:
-                message = 'Invalid ping command.'
-
-        elif commands[0] == 'info':
-            if len(commands) == 2:
-                server_ip = commands[1]
-                server = server_ip.split(':')
-                port = 1998
-                if len(server) == 2:
-
-                    server_ip = server[0]
-
-                    port = int(server[1])
-                message = ping(server_ip, port)
-            else:
-                message = 'Invalid ping command.'
-
+        # Fallback (breaks out of loop)
         else:
             break
 
