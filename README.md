@@ -1,5 +1,5 @@
 # Telepy
- Telepy is a recreation of a teletype terminal interface using TCP this project has been going on for almost 3 years. It features encrypted inputs, colour text, colour 2d arrays and more. The project features a complied exe client, a version for Linux, and server tools. If  you want a server, try going to 'server.fractaldev.co' where Telepy-connect is running. This is also a project running alongside this not the only use for this project you can use it for server monitoring, making an online version of the cli python project and more.
+ Telepy is a terminal interface using TCP this project has been going on for almost 4 years. It features encrypted inputs, colour text, colour 2d arrays and more. The project features a complied exe client, a version for Linux, and server tools. If  you want a server, try going to 'server.fractaldev.co' where Telepy-connect is running. This is also a project running alongside this not the only use for this project you can use it for making your own BBS (Bulletin Board system), server monitoring, making an online version of the cli python project and more.
  ![](thumbnail.png "Telepy")
 
 ## Contents
@@ -27,29 +27,49 @@
 
 # Client
 ## setup
-To set up the client to download the latest release this should be in the format of `v(version).zip`. This file contains two folders a server folder and a client folder this folder will contain a and exe, py and txt files. If you are on Windows you can just run the exe (Windows Defender will pop up click more info then run anyway. If you do not feel that you can trust the exe run the Client.py in the source code this is not the most optimised version though and may not be the correct version.) if you are on a Linux distro run `Telepi.py`.
+To set up the client to download the latest release this should be in the format of `v(version).zip`. This file contains two folders a server folder and a client folder this folder will contain a and exe, py and txt files. If you are on Windows you can just run the exe (Windows Defender will pop up click more info then run anyway. If you do not feel that you can trust the exe run the Client.py in the source code this is not the most optimized version though and may not be the correct version.) if you are on a Linux try connecting via the telnet client.
+
+## Telnet Client
+To use the telnet client all you need is a telnet client eg windows inbuilt client (Only works when explicitly enabled) or any other but it is recommended to use windows inbuilt client if you are on windows. When just connect to `telnet telnet.fractaldev.co`. It is recommended to use the windows client exe as this give the best experience and allows the saving of settings and in v1.9 automatic updates and session features. Also you server you are running has to have port forwarding to connect to has the telnet client doesn't run locally and on the the server. For testing your server local use the exe or host the telnet client your self.
+
 
 ## Connecting to a server
 
-To connect the server just enter the ip or the domain by default servers rn on port 1998. For the custom ports add `:` at the end of the IP/domain then the port eg `exsample.com:1234`. For the local host just enter `@` and `:` for the port eg `@:1234`.
+To connect the server just enter the ip or the domain by default servers run on port by default 1998. For the custom ports add `:` at the end of the IP/domain then the port eg `exsample.com:1234`. For the local host just enter `@` and `:` for the port eg `@:1234`.
 
 ## Settings
 
 Settings can be easily changed at the prompt just enter `settings`.
 
+### Weather location
+
+The location used to get your weather using curl this information is not sent to the server.
+
+### Default server
+
+The server that can quickly be connected to when nothing is entered when asking for the ip.
+
+### Switch Concent
+
+This by-pases the input of asking if you would like to change the server. Eg if `false` you have to confirm if you would like to switch server. If `True` the client will switch server without the confirmation.
+
 # Server
 
 ## Setup
 
-To start a server go to the server folder of the release zip. There is a directory called `TelePy` and there should be a file called `tp.py` this is where the library is. To run the server simply run the `main.py` in the server directory.
+To start a server go to the server folder of the release zip. There is a directory called `TelePy` and there should be a file called `tp.py` this is where the library is. To run the server simply run the `example.py` in the server directory.
 
 ## Server Structure
 
-The structure of the `main.py` is recommended but also advised to modify/expand upon it depending on the project. Import the library with `from Telepy import tp as tp`. To make a connection start by setting up the socket with `Sct = tp.setup()` this will be configured based on the `server_config.txt` read the config section for more info. Accept the connection with `client_c, add = Sct.accept()` this will store the connection as `client_c` and the connection IP address as `add`. Now you need to create the client object using `client = tp.Client(client_c, add)`. After that abide by the syntax.
+The structure of the `example.py` is recommended but also advised to modify/expand upon it depending on the project. The basic premise is that the client code will be excuted from `def client_side(client):` which parse the client object. To run the server you just have to run `tp.start(client_side)` with `client_side` the function that runs the client code. With this it will start the server which has builtin threading for clients, error handling, server information and ping handling all running under the port specified in config.txt.
+
+## Config
+
+To configure the information for the server on start up run
 
 ## Syntax
 
-Here is the documentation of the syntax for telepy all examples have `client` as the client object and use `from Telepy import tp as tp`
+Here is the documentation of the syntax for telepy all examples have `client` as the client object and use `import Telepy as tp`.
 
 ### Log
 

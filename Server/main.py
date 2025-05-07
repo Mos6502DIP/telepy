@@ -73,7 +73,7 @@ def clientside(client):
     client.cls()
     c_version = client.client_version()
     d_version = client.device()
-    client.print("Print test!")
+    client.print("Print | test!")
     client.print(f"Version: {c_version}")
     client.print(f"Device Info {d_version}" )
     
@@ -120,7 +120,7 @@ def clientside(client):
     client.input("Press Enter to continue...")
 
     client.print('Getting Sever Sats')
-    server_info = tp.get_info('127.0.0.1')
+    server_info = tp.get_info('127.0.0.1:2001')
 
     client.print(f'''Name : {server_info['name']}
 Description : {server_info['description']}
@@ -129,7 +129,8 @@ Users Online {server_info['online']}
 Icon :''')
     for line in server_info['icon']:
         client.print(line)
-    client.print(f'Ping:{round(tp.ping("127.0.0.1"), 2)}')
+    client.print(f'Ping:{round(tp.ping("127.0.0.1:2001"), 2)}')
+    client.get_ip()
     client.input("Press Enter to continue...")
     client.switch("server.fractaldev.co")
 

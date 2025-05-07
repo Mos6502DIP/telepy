@@ -1,0 +1,14 @@
+{
+    "port": 1998, 
+    "listen": 120, 
+    "server_name": "Example TelePy server",
+    "description": "Server description for your server",
+    "icon": [
+        "##############",
+        "#            #",
+        "#    U   U   #",
+        "#      W     #",
+        "##  ######  ##",
+        " ####    ####"
+    ]
+}

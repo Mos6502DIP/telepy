@@ -5,6 +5,7 @@ import os
 import time
 from getpass import getpass
 import keyboard
+import sys
 # Telepy Copyright 2025 Peter Cakebread
 
 v_settings = {'auto_return', 'location', 'default_server', 'switch_consent'} # Ensures that the client settings json is up to date
@@ -18,7 +19,14 @@ ip = ''
 
 settings = {}
 
-os.chdir(os.path.dirname(os.path.abspath(__file__))) # Fixes issues related to files being incorrect
+if getattr(sys, 'frozen', False): # Py installer fix
+    # Running as a bundled executable
+    app_dir = os.path.dirname(sys.executable)
+else:
+    # Running in development
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+
+os.chdir(app_dir) # Fixes issues related to files being incorrect
 
 def info(server_ip, port):
     try:
@@ -255,6 +263,8 @@ def dum_ter(server, cSct):
     server_m = server[0]  # the first digit is the mode set by the server.
 
     data = server[len(server) - 1]
+
+    data = data.replace('($SEP$)', '|')
     
     match server_m:
         case "0":
@@ -358,6 +368,9 @@ def dum_ter(server, cSct):
                 else:
                     cSct.send(bytes('deny', "utf-8"))
                     return None
+                
+        case "16":
+            cSct.send(bytes(data))
         case _:
             print("Out dated client")
             return None
@@ -460,11 +473,10 @@ P'   MM   `7      MM                MM   `MM.
 
         # Credits command
         elif ip == "credits":
-            message = f"""
-        Credits
-            {colour("Programing", "green")} - {colour("Peter Cakebread", "blue")}
-            {colour("Testing", "light_magenta")} - {colour("Devcat2001", "light_blue")}
-            {colour("Weather (wttr.in)", "yellow")} - {colour("igor_chubin", "light-cyan")}    
+            message = f"""Credits
+{colour("Programing", "green")} - {colour("Peter Cakebread", "blue")}
+{colour("Testing", "light_magenta")} - {colour("Devcat2001", "light_blue")}
+{colour("Weather (wttr.in)", "yellow")} - {colour("igor_chubin", "light-cyan")}    
             """
 
         # Settings command

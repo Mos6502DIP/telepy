@@ -1,0 +1,1 @@
+{"location": "London", "default_server": "lucario:2001", "auto_return": false, "switch_consent": false}

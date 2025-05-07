@@ -227,7 +227,7 @@ class Client:
 
     def print(self, string):
         try:
-            time.sleep(buffer)
+            string = string.replace('|', '($SEP$)')
             self.client.send(bytes(f"0|{string}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
@@ -242,7 +242,7 @@ class Client:
 
     def input(self, string):
         try:
-            time.sleep(buffer)
+            string = string.replace('|', '($SEP$)')
             self.client.send(bytes(f"1|{string}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
@@ -259,7 +259,7 @@ class Client:
 
     def closet_log(self, log_file, string):
         try:
-            time.sleep(buffer)
+            string = string.replace('|', '($SEP$)')
             self.client.send(bytes(f"2|{string}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
@@ -304,7 +304,7 @@ class Client:
 
     def password(self, string):
         try:
-            time.sleep(buffer)
+            string = string.replace('|', '($SEP$)')
             self.client.send(bytes(f"5|{string}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
@@ -353,7 +353,7 @@ class Client:
 
     def hidden_input(self, string):
         try:
-            time.sleep(buffer)
+            string = string.replace('|', '($SEP$)')
             self.client.send(bytes(f"8|{string}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
@@ -374,7 +374,7 @@ class Client:
                    "light_blue", "light_magenta", "light_cyan", "white"]  # compatible colours
 
         try:
-            time.sleep(buffer)
+            string = string.replace('|', '($SEP$)')
             if len(color) == 1:
                 color.append("black")
             if color[0] in colours:
@@ -399,9 +399,11 @@ class Client:
 
 
         try:
-            time.sleep(buffer)
+            string = json.dumps(array)
 
-            self.client.send(bytes(f"10|{json.dumps(array)}", "utf-8"))
+            string = string.replace('|', '($SEP$)') 
+
+            self.client.send(bytes(f"10|{string}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
             if acknowledgment != "ACK":
@@ -414,8 +416,9 @@ class Client:
 
     def print2dc(self, array):
         try:
-            time.sleep(buffer)
-            self.client.send(bytes(f"11|{json.dumps(array)}", "utf-8"))
+            string = json.dumps(array)
+            string = string.replace('|', '($SEP$)')
+            self.client.send(bytes(f"11|{string}", "utf-8"))
             acknowledgment = self.client.recv(1024).decode()
             if acknowledgment != "ACK":
                 print("Error: Client did not acknowledge the message.")
@@ -477,7 +480,7 @@ class Client:
         
     def switch(self, string):
         try:
-            time.sleep(buffer)
+            string = string.replace('|', '($SEP$)')
             self.client.send(bytes(f"15|{string}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
@@ -498,17 +501,17 @@ class Client:
 
             return None
 
-    def closet(self, string):
+    def get_ip(self):
         try:
-            time.sleep(buffer)
-            self.client.send(bytes(f"15|{string}", "utf-8"))
+           
+            self.client.send(bytes(f"16|{self.client_ip}", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
             if acknowledgment != "ACK":
                 print("Error: Client did not acknowledge the message.")
 
-            self.client.close()
-            print(f"{self.client_ip} has disconnected from the server at {datetime.datetime.now()}")
+
+            return self.client.recv(1024).decode()
         except socket.error as e:
             if e.errno != 10038 and e.errno != 10054:
                 print(f"Socket error: {e}")
