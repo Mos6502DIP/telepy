@@ -4,16 +4,16 @@ import socket
 import os
 import time
 from getpass import getpass
-import keyboard
+# import keyboard
 import sys
 # Telepy Copyright 2025 Peter Cakebread
 
 v_settings = {'auto_return', 'location', 'default_server', 'switch_consent'} # Ensures that the client settings json is up to date
 
-ver = "1.8"
-device = "win"
+ver = "TelePy,1.9"
 
-message = ""
+message = ''
+
 
 ip = ''
 
@@ -304,7 +304,7 @@ def dum_ter(server, cSct):
             return None
 
         case "7":
-            os.system(f'curl wttr.in/{settings["location"]}')
+            print("It's Raining because we be in the UK")
             return None
 
         case "8":
@@ -345,7 +345,7 @@ def dum_ter(server, cSct):
 
         case "14":
 
-            cSct.send(bytes(str(device), "utf-8"))
+            cSct.send(bytes(str(ver), "utf-8"))
             return None
 
         case "15":
@@ -370,9 +370,9 @@ def dum_ter(server, cSct):
                     return None
                 
         case "16":
-            cSct.send(bytes(data))
+            cSct.send(bytes(data, "utf-8"))
         case _:
-            print("Out dated client")
+            print(f"Invalid Head / Out dated client. Head recived ({server_m})")
             return None
 
 
@@ -396,7 +396,7 @@ P'   MM   `7      MM                MM   `MM.
                                                 ,V      
                                              OOb"       
         ''')
-        print(colour("Telepy", "green"), "by", colour("Peter Cakebread", "blue"), f" 2025 v{ver} ({device})")
+        print(colour("Telepy", "green"), "by", colour("Peter Cakebread", "blue"), f" 2025 v{ver}")
         if message != "":
             if message == 'server change':
                 print(f'Server switching to {ip}')
@@ -514,11 +514,7 @@ P'   MM   `7      MM                MM   `MM.
         Sct.connect((ip, port))
         Sct.send(bytes('terminal', "utf-8")) # Tells the server it wants a terminal
         while True:
-            if keyboard.is_pressed("ESC"):
-                message = "Disconnected by User"
-                Sct.close()
-                break
-
+            
             try:
                 server_rev = Sct.recv(6000).decode()
                 if not server_rev:

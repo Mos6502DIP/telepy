@@ -503,12 +503,29 @@ class Client:
 
     def get_ip(self):
         try:
-           
-            self.client.send(bytes(f"16|{self.client_ip}", "utf-8"))
+            
+            time.sleep(buffer)
+            self.client.send(bytes(f"14|", "utf-8"))
 
             acknowledgment = self.client.recv(1024).decode()
             if acknowledgment != "ACK":
                 print("Error: Client did not acknowledge the message.")
+
+            device = (self.client.recv(1024).decode()).split(',')[0]
+
+            if device == 'TelePy':
+                self.client.send(bytes(f"16|{self.client_ip}", "utf-8"))
+
+                acknowledgment = self.client.recv(1024).decode()
+                if acknowledgment != "ACK":
+                    print("Error: Client did not acknowledge the message.")
+
+            else:
+                self.client.send(bytes(f"16|{self.client_ip}", "utf-8"))
+
+                acknowledgment = self.client.recv(1024).decode()
+                if acknowledgment != "ACK":
+                    print("Error: Client did not acknowledge the message.")
 
 
             return self.client.recv(1024).decode()
