@@ -2,6 +2,13 @@
  Telepy is a terminal interface using TCP this project has been going on for almost 4 years. It features encrypted inputs, colour text, colour 2d arrays and more. The project features a complied exe client, a version for Linux, and server tools. If  you want a server, try going to 'server.fractaldev.co' where Telepy-connect is running. This is also a project running alongside this not the only use for this project you can use it for making your own BBS (Bulletin Board system), server monitoring, making an online version of the cli python project and more.
  ![](thumbnail.png "Telepy")
 
+
+# Long time no See
+
+This is a beta for the 1.9 which will have a beta by Mid may. Also a java edition. Due to the nature of the update full 1.9-2.0 documentation will not be avlible till mid to late may.
+
+
+
 ## Contents
 <!-- TOC -->
 * [Telepy](#telepy)

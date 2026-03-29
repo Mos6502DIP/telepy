@@ -1,0 +1,12 @@
+{
+    "server_name": "Example TelePy server",
+    "description": "Server description for your server",
+    "icon": [
+        "  #########",
+        " #         #",
+        "#   O . O   #",
+        "#     3     #",
+        "#   #####   #",
+        " ###     ###"
+    ]
+}

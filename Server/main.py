@@ -6,7 +6,7 @@ from os.path import join
 import os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__))) #Fixes issues with working directory
-
+info_source = 'server.fractaldev.co:1998'
 
 def screen_generate(x, y, char):
     mem = []
@@ -50,13 +50,7 @@ def txt(client, file_name):
             if line.strip() == "@":
                 client.blankline()
             else:
-                client.print(line.strip())
-
-
-def log(filename, text):
-    print(text)
-    with open(filename, 'a') as file:
-        file.write(text + '\n')
+                client.print(line.strip()) 
 
 
 def date():
@@ -71,12 +65,9 @@ def time():
 def clientside(client):
     # Basic functions test
     client.cls()
-    c_version = client.client_version()
-    
     client.print("Print | test!")
-    client.print(f"Version: {c_version}")
-  
-    
+    client.print(f"Version: {client.client_version()}")
+   
     user_input = client.input("Enter Normal input:>")
     password = client.password("Enter Password input:>")
     hidden = client.hidden_input("Enter Hidden input:>")
@@ -84,11 +75,7 @@ def clientside(client):
     txt(client,"Test")
 
     client.input('Pause Press enter to continue :>')
-    # Remote Commands test
-    client.print("Weather")
-
-    client.weather()
-    client.input('Pause Press enter to continue')
+    
     client.print("Colour test!")
 
     colours = ["black", "red", "green", "yellow", "blue", "magenta", "cyan",
@@ -106,40 +93,39 @@ def clientside(client):
 
     screen = screen_generate(10,10,"@")
 
-    print(screen)
+  
 
     client.print2d(screen)
+    # print(screen)
     client.input('Pause Press enter to continue')
 
     client.print("Colour array test!")
 
     screen = screen_generate_colour(colours, "@")
-    print(screen)
+    #print(screen)
     client.print2dc(screen)
 
     client.input("Press Enter to continue...")
 
     client.print('Getting Sever Sats')
-    server_info = tp.get_info('127.0.0.1:1998')
-
-    client.print(f'''Name : {server_info['name']}
-Description : {server_info['description']}
-Uptime : {server_info['uptime']}
-Users Online {server_info['online']}
-Icon :''')
-    for line in server_info['icon']:
-        client.print(line)
-    client.print(f'Ping:{round(tp.ping("127.0.0.1:1998"), 2)}')
+    server_info = tp.get_info(info_source)
+    if server_info:
+        client.print(f'''Name : {server_info['name']}
+    Description : {server_info['description']}
+    Uptime : {server_info['uptime']}
+    Users Online {server_info['online']}
+    Icon :''')
+        for line in server_info['icon']:
+            client.print(line)
+    else:
+        client.print(f"Unable to get the server info from ({info_source})")
+    client.print(f'Ping:{tp.ping(info_source)}')
     client.print(F'IP:{client.get_ip()}')
     client.input("Press Enter to continue...")
     client.switch("@")
 
-    client.closet_log(log_file,f"Disconnected by user!")
+    client.close(f"All test complete and you have been disconnected!")
 
 
 if __name__ == '__main__':
-    log_file = join("Logs", f"Telpy server logs for {date()}.txt")  # Change this to your desired file name
-
-    log(log_file, f"Starting server at {time()}")
-
-    tp.start(clientside, log_file=log_file)  # Starts a server based on the config txt
+    tp.start(clientside)  # Starts a server based on the config txt
