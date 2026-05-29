@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "paramiko"
+"telnetlib3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "telepy-net"
+version = "0.1.9"
+description = "A sytem to create terminal based systems acesse over a network."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "GNU3" }
+
+authors = [
+  { name = "Peter Cakebread", email = "help@telepy.net" }
+]
+
+dependencies = [
+  "requests>=2.31"
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: GNU AFFERO GENERAL PUBLIC LICENSE",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/Mos6502DIP/telepy"
+Issues = "https://github.com/Mos6502DIP/telepy/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
