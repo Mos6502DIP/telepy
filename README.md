@@ -8,29 +8,50 @@
 This is a beta for the 1.9 which will have a beta by Mid may. Also a java edition. Due to the nature of the update full 1.9-2.0 documentation will not be avlible till mid to late may.
 
 
+## Installation
 
-## Contents
-<!-- TOC -->
-* [Telepy](#telepy)
-  * [Contents](#contents)
-* [Client](#client)
-  * [setup](#setup)
-  * [Connecting to a server](#connecting-to-a-server)
-  * [Settings](#settings)
-* [Server](#server)
-  * [Setup](#setup-1)
-  * [Server Structure](#server-structure)
-  * [Syntax](#syntax)
-  * [Server Config](#server-config)
-* [Contributing](#contributing)
-  * [License](#license)
-* [Planned updates](#planned-updates)
-  * [v1.5.1](#v151)
-    * [Automatic Updates](#automatic-updates)
-    * [Bug fix](#bug-fix)
-  * [v1.5.2](#v152)
-    * [Cookie-like feature](#cookie-like-feature)
-<!-- TOC -->
+```bash
+pip install telepy-net
+```
+
+Or run from source:
+
+```bash
+git clone https://github.com/MOS6502DIP/telepy
+cd telepy
+pip install -r Server-Testing/requirements.txt
+```
+
+## Quick Start
+
+```python
+import TelePy as tp
+
+def client_side(client):
+    client.print("Hello world!")
+    client.input("Press Enter to continue...")
+    client.close("Disconnected by Server!")
+
+if __name__ == '__main__':
+    tp.start(client_side)
+```
+
+See the `Example/` directory for a working example.
+
+## Configuration
+
+Edit `config.json` (in your working directory):
+
+```json
+{
+    "telepy": {"enabled": true, "port": 1998, "password": "joshua", "max_connections": 30},
+    "telnet": {"enabled": true, "port": 2323, "max_connections": 20},
+    "ssh": {"enabled": true, "port": 2222, "password": "joshua", "max_connections": 20}
+}
+```
+
+
+
 
 # Client
 ## setup
