@@ -1,0 +1,1 @@
+{"default_server": "@", "auto_return": false, "switch_consent": false}

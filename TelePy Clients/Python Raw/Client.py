@@ -4,7 +4,6 @@ import socket
 import os
 import time
 from getpass import getpass
-# import keyboard
 import sys
 # Telepy Copyright 2026 Peter Cakebread
 
@@ -161,6 +160,13 @@ def save_biscuit(server, biscuit):
             return 'None'
     except FileNotFoundError:
         return 'None'
+
+
+
+def move_cursor(row: int, col: int) -> None:
+    """Move the terminal cursor to the given row and column (1-based)."""
+    sys.stdout.write(f"\x1b[{row};{col}H")
+    sys.stdout.flush()
 
 def write_settings(file, saved_settings):
     with open(file, "w") as f:
@@ -381,6 +387,11 @@ def dum_ter(server, cSct):
 
         case "19":
             print(data, end="")
+            return None
+        
+        case "20":
+            # x column (server[1]) y row (server[2])
+            move_cursor(int(server[2]), int(server[1]))
             return None
         
         case _:

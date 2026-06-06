@@ -124,8 +124,25 @@ def clientside(client):
     client.input("Press Enter to continue...")
     client.switch("@")
 
+
+    client.input('Pause Press enter to continue')
+    client.cls()
+    # Top header
+    for x in range(1, 10):
+        client.cursor(x * 3, 1)
+        client.print(str(x))
+
+    # Left header and sums
+    for y in range(1, 10):
+        client.cursor(1, y + 1)
+        client.print(str(y))
+
+        for x in range(1, 10):
+            client.cursor(x * 3, y + 1)
+            client.print(str(x + y))
+    client.input('Tests Done!')
     client.close(f"All test complete and you have been disconnected!")
 
 
 if __name__ == '__main__':
-    tp.start(clientside)  # Starts a server based on the config txt
+    tp.start(clientside, dev_mode=False)  # Starts a server based on the config txt

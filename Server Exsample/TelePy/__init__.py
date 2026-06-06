@@ -7,9 +7,7 @@ import time
 import threading
 import signal 
 import sys
-import TelePy.ssh as sshmod
-import TelePy.tele as tele
-import TelePy.telnet as telenet
+
 buffer = 0
 
 settings = {}
@@ -90,59 +88,68 @@ def date():
     current_datetime = datetime.datetime.now()
     return current_datetime.date()
 
-def start(client_side):
-    signal.signal(signal.SIGTERM, shutdown) 
-    signal.signal(signal.SIGINT, shutdown)
-    load_config()
-    for type in settings.keys():
-        if settings[type]['enabled']:
+def start(client_side, dev_mode=False):
+    if dev_mode:
+        import TelePy.dev as dvt
+        dvt.dev(client_side)
 
-            if type == 'telepy':
-                server_thread = threading.Thread(
-                    
-                    target=tele.start_telepy,
-                    args=(client_side, settings[type]['port']),
-                    name=f"ServerThread-{type}",
-                    daemon=True
-                )
-                server_thread.start()
+    else:
+        # for me on train and with  no wifi, but also a nice feature to have IG :) 
+        import TelePy.ssh as sshmod
+        import TelePy.tele as tele
+        import TelePy.telnet as telenet
+        signal.signal(signal.SIGTERM, shutdown) 
+        signal.signal(signal.SIGINT, shutdown)
+        load_config()
+        for type in settings.keys():
+            if settings[type]['enabled']:
 
-            elif type == 'ssh':
-                try:
-                    
-                    # Use the blocking start_ssh in its own thread
+                if type == 'telepy':
                     server_thread = threading.Thread(
-                        target=sshmod.start_ssh,
+                        
+                        target=tele.start_telepy,
                         args=(client_side, settings[type]['port']),
                         name=f"ServerThread-{type}",
                         daemon=True
                     )
                     server_thread.start()
-                except Exception as e:
-                    print(f'Failed to start ssh server: {e}')
+
+                elif type == 'ssh':
+                    try:
+                        
+                        # Use the blocking start_ssh in its own thread
+                        server_thread = threading.Thread(
+                            target=sshmod.start_ssh,
+                            args=(client_side, settings[type]['port']),
+                            name=f"ServerThread-{type}",
+                            daemon=True
+                        )
+                        server_thread.start()
+                    except Exception as e:
+                        print(f'Failed to start ssh server: {e}')
 
 
-            elif type == 'telnet':
-                try:
-                    
-                    # Use the blocking start_ssh in its own thread
-                    server_thread = threading.Thread(
-                        target=telenet.start_bbs_server,
-                        args=(client_side, settings[type]['port']),
-                        name=f"ServerThread-{type}",
-                        daemon=True
-                    )
-                    server_thread.start()
-                except Exception as e:
-                    print(f'Failed to start ssh server: {e}')
+                elif type == 'telnet':
+                    try:
+                        
+                        # Use the blocking start_ssh in its own thread
+                        server_thread = threading.Thread(
+                            target=telenet.start_bbs_server,
+                            args=(client_side, settings[type]['port']),
+                            name=f"ServerThread-{type}",
+                            daemon=True
+                        )
+                        server_thread.start()
+                    except Exception as e:
+                        print(f'Failed to start ssh server: {e}')
 
-            else:
-                print(f'Json syntax error Type:{type} is invalid.')
+                else:
+                    print(f'Json syntax error Type:{type} is invalid.')
 
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("\nStopping the threads Bye Bye :3")
-        sys.exit(0)
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            print("\nStopping the threads Bye Bye :3")
+            sys.exit(0)
 

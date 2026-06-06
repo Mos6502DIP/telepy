@@ -237,6 +237,7 @@ class Client:
 
     def print(self, string):
         try:
+            string = str(string)
             to_send = string.split('\n')
             for string in to_send:
                 string = string.replace('|', '($SEP$)')
@@ -542,6 +543,21 @@ class Client:
                 ack = ack.replace('\n', '')
                 if ack != "ACK":
                     print("Error: Client did not acknowledge the message.")
+
+
+        except socket.error as e:
+            if e.errno != 10038 and e.errno != 10054:
+                print(f"Socket error: {e}")
+
+    def cursor(self, x, y):
+        try:
+            
+            self.client.send(bytes(f"20|{x}|{y}\n", "utf-8"))
+
+            ack = self.client.recv(1024).decode()
+            ack = ack.replace('\n', '')
+            if ack != "ACK":
+                print("Error: Client did not acknowledge the message.")
 
 
         except socket.error as e:
