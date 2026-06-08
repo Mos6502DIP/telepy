@@ -145,4 +145,4 @@ def clientside(client):
 
 
 if __name__ == '__main__':
-    tp.start(clientside, dev_mode=False)  # Starts a server based on the config txt
+    tp.start(clientside, dev_mode=True)  # Starts a server based on the config txt

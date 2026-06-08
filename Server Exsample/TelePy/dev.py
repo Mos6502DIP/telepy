@@ -1,4 +1,4 @@
-
+import sys
 import socket
 import threading
 import json
@@ -171,7 +171,12 @@ def dev(client_side):
     client_obj = Client()
 
     client_side(client_obj)
-    
+
+def move_cursor(row: int, col: int) -> None:
+    """Move the terminal cursor to the given row and column (1-based)."""
+    sys.stdout.write(f"\x1b[{row};{col}H")
+    sys.stdout.flush()
+
 
 class Client:
 
@@ -254,5 +259,8 @@ class Client:
 
     def get_ip(self): # Mode 16
         return "127.0.0.1"
+    
+    def cursor(self, x, y):
+         move_cursor(x, y)
     
     
