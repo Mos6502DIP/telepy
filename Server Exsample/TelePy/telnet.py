@@ -1,7 +1,7 @@
 import telnetlib3 as telnetlib
 import socket
 import hashlib
-import threading  # This is use for multiple clients
+import threading
 import time
 import random
 import sys
@@ -12,6 +12,8 @@ WONT = b'\xfc'
 DO   = b'\xfd'
 DONT = b'\xfe'
 ECHO = b'\x01'
+
+SGA = b'\x03'
 
 active_connections = []
 
@@ -27,8 +29,10 @@ class setup_connection():
         self.ip = ip
         self.port = port
 
+        
+
     def print(self, string):
-        if '\n' in string or '\r\n' in string: # Multi line have to be processed manually
+        if '\n' in string or '\r\n' in string:  # Multi line have to be processed manually
             lines = string.splitlines()
             for line in lines:
                 self.tn.write(f'{line}'.encode())
@@ -38,22 +42,73 @@ class setup_connection():
             self.tn.write(b'\r\n')
 
     def clear(self):
-        self.tn.write(b"\033[2J")
+        self.tn.write(b"\033[2J\033[H")
 
     def input(self, string):
+       
         self.tn.write(f'{string}'.encode())
-        return self.tn.read_until(b"\r\n").decode('utf-8').strip()
+        user_input = ""
+        while True:
+            try:
+                char_bytes = self.tn.read_very_eager()
+                
+                if char_bytes:
+                    char = char_bytes.decode('utf-8', errors='ignore')
+                    
+                    # Handle backspace/delete
+                    if char == '\x08' or char == '\x7f':
+                        if len(user_input) > 0:
+                            user_input = user_input[:-1]
+                            # Move cursor back, erase character, move back again
+                            self.tn.write(b'\x08 \x08')
+                    # Handle carriage return/newline (both \r and \n)
+                    elif char == '\r' or char == '\n':
+                        self.tn.write(b'\r\n')
+                        break
+
+                    elif char == '\r\n':
+                        self.tn.write(b'\r\n')
+                        break
+                    # Handle regular characters
+                    else:
+                        user_input += char
+                        self.tn.write(char.encode())
+                        
+            except Exception as e:
+                pass
+            time.sleep(0.01)
+        return user_input
     
     def hidden_input(self, string):
         self.tn.write(string.encode())
-        user_input = self.tn.read_until(b"\r\n").decode('utf-8').strip()
+        user_input = ""
+        while True:
+            try:
+                char_bytes = self.tn.read_very_eager()
+                if char_bytes:
+                    char = char_bytes.decode('utf-8', errors='ignore')
+                    
+                    # Handle backspace/delete
+                    if char == '\x08' or char == '\x7f':
+                        if len(user_input) > 0:
+                            user_input = user_input[:-1]
+                            # Move cursor back, erase character, move back again
+                            self.tn.write(b'\x08 \x08')
+                    # Handle carriage return/newline (both \r and \n)
+                    elif char == '\r' or char == '\n':
+                        self.tn.write(b'\r\n')
+                        break
 
-        # Overwrite line with asterisks or clear it
-        erase_line = '\r' + ' ' * (len(string) + len(user_input)) + '\r'
-        self.tn.write(b'\033[1A')
-        self.tn.write(erase_line.encode())
-        self.tn.write(f'{string}{"*" * len(user_input)}\r\n'.encode())
-
+                    elif char == '\r\n':
+                        self.tn.write(b'\r\n')
+                        break
+                    # Handle regular characters - echo as asterisk for password fields
+                    else:
+                        user_input += char
+                        self.tn.write(b'*')
+            except Exception as e:
+                pass
+            time.sleep(0.01)
         return user_input
     
     def print_no_new_line(self, string):
@@ -143,7 +198,6 @@ class dum_ter:
         self.connection.print(string)
         
     def input(self, string):
-        
         user_input = self.connection.input(string)
         if user_input == "":
             user_input = "None"
@@ -152,8 +206,7 @@ class dum_ter:
     def close(self, string):
         self.connection.print(string)
         self.socket.close()
-        sys.exit() # This is the wrong way to implement this but it works (Hopefully) :3
-        
+        sys.exit()
 
     def cls(self):
         self.connection.clear()
@@ -182,7 +235,6 @@ class dum_ter:
     def printc(self, string, data):
         if len(data) > 1:
             self.connection.print(colour(string, data[0]))
-
         else:
             self.connection.print(colour(string, data[0], data[1]))
     
@@ -221,14 +273,26 @@ def handle_connection_wrapper(connection, clientside):
 def handle_connection(connection, clientside):
     # New code base
     try:
+        
+        
         bot_test_code = str(random.randint(100000, 999999))
         connection.socket.settimeout(10)
+        
+        
+        
         connection.print(f'Access Code : {bot_test_code}')
         connection.print(f'{colour("Powered Via Telepy", "green")} by {colour("Peter Cakebread", "blue")} 2026 v{version}')
+        
+        # Debug: Print what we're waiting for
+        print(f"Waiting for access code from {connection.ip}")
+        
         user_code = connection.input("Please enter the access code:>")
+        print(f"Received code: '{user_code}' from {connection.ip}")  # Debug
+        
         if user_code != bot_test_code:
             connection.print(colour('! Invalid access code reconnect and try again !', 'red'))
             connection.socket.close()
+            return
 
         terminal = dum_ter(connection)
         clientside(terminal)
@@ -236,20 +300,15 @@ def handle_connection(connection, clientside):
             
 
     except socket.timeout:
-        print(connection.ip)
+        print(f"Timeout from IP: {connection.ip}")
         connection.socket.close()
-        
+        return
+    except Exception as e:
+        print(f"Error in handle_connection: {e}")
+        import traceback
+        traceback.print_exc()
+        connection.socket.close()
 
-
-
-
-
-
-
-
-    
-    
-    
 
 def start_bbs_server(client_side, port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -259,11 +318,21 @@ def start_bbs_server(client_side, port):
     
     cleanup_thread = threading.Thread(target=clean_dead_threads, daemon=True)
     cleanup_thread.start()
+    
     while True:
         time.sleep(0.001)
         print('Waiting for Telnet next connection')
         try:
             client_socket, client_address = server_socket.accept()
+            client_socket.sendall(b"\xff\xfb\x01")  # WILL ECHO
+            client_socket.sendall(b"\xff\xfb\x03")  # WILL SGA
+            client_socket.sendall(b"\xff\xfd\x03")  # DO SGA
+           
+            data = client_socket.recv(1024)
+            accepted_terms = [b'\xff\xfd\x01', b"\xff\xfb\x1f\xff\xfb \xff\xfb\x18\xff\xfb'\xff\xfd\x01\xff\xfb\x03\xff\xfd\x03"]
+            if data not in accepted_terms:
+                print(data)
+                
             print(f"Connection from {client_address}")
             client_socket.settimeout(10)
 
@@ -281,6 +350,6 @@ def start_bbs_server(client_side, port):
 
         except Exception as e:
             print(f"Fatal error: {e}")
+            import traceback
+            traceback.print_exc()
             raise
-
-

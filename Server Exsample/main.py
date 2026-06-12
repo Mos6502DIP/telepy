@@ -5,6 +5,7 @@ import time
 from os.path import join
 import os
 
+
 os.chdir(os.path.dirname(os.path.abspath(__file__))) #Fixes issues with working directory
 info_source = 'server.fractaldev.co:1998'
 
@@ -145,4 +146,4 @@ def clientside(client):
 
 
 if __name__ == '__main__':
-    tp.start(clientside, dev_mode=True)  # Starts a server based on the config txt
+    tp.start(clientside)  # Starts a server based on the config txt

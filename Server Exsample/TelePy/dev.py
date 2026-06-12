@@ -4,7 +4,16 @@ import threading
 import json
 import time
 import datetime
+import ctypes
 
+if sys.platform == "win32":
+    kernel32 = ctypes.windll.kernel32
+    STD_OUTPUT_HANDLE = -11
+    handle = kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
+    mode = ctypes.c_uint32()
+    if kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
+        mode.value |= 0x0004  # ENABLE_VIRTUAL_TERMINAL_PROCESSING
+        kernel32.SetConsoleMode(handle, mode)
 
 
 buffer = 0
