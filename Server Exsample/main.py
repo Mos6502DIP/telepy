@@ -130,16 +130,16 @@ def clientside(client):
     client.cls()
     # Top header
     for x in range(1, 10):
- #       client.cursor(x * 3, 1)
+        client.cursor(x * 3, 1)
         client.print(str(x))
 
     # Left header and sums
     for y in range(1, 10):
- #       client.cursor(1, y + 1)
+        client.cursor(1, y + 1)
         client.print(str(y))
 
         for x in range(1, 10):
-     #       client.cursor(x * 3, y + 1)
+            client.cursor(x * 3, y + 1)
             client.print(str(x + y))
     client.input('Tests Done!')
     client.close(f"All test complete and you have been disconnected!")

@@ -17,7 +17,7 @@ SGA = b'\x03'
 
 active_connections = []
 
-version = "Telnet-1.9"
+version = "Telnet-2.1"
 
 class setup_connection():
     def __init__(self, tn, socket):
@@ -43,6 +43,12 @@ class setup_connection():
 
     def clear(self):
         self.tn.write(b"\033[2J\033[H")
+
+    def move_cursor(self, row: int, col: int) -> None:
+        """Move the terminal cursor to the given row and column (1-based)."""
+        bite = f"\x1b[{row};{col}H".encode("UTF-8")
+        self.tn.write(bite)
+        
 
     def input(self, string):
        
@@ -259,8 +265,12 @@ class dum_ter:
 
     def switch(self, ip):
         self.connection.print(f'Server has attempted to switch to :{ip} Unable due to telnet.')
+
+
         return False
-            
+    
+    def cursor(self, x, y):
+        self.connection.move_cursor(int(y), int(x))
 
         
 def handle_connection_wrapper(connection, clientside):
@@ -318,16 +328,16 @@ def start_bbs_server(client_side, port):
     
     cleanup_thread = threading.Thread(target=clean_dead_threads, daemon=True)
     cleanup_thread.start()
-    
-    while True:
-        time.sleep(0.001)
-        print('Waiting for Telnet next connection')
-        try:
+    try:
+        while True:
+            time.sleep(0.001)
+            print('Waiting for Telnet next connection')
+            
             client_socket, client_address = server_socket.accept()
             client_socket.sendall(b"\xff\xfb\x01")  # WILL ECHO
             client_socket.sendall(b"\xff\xfb\x03")  # WILL SGA
             client_socket.sendall(b"\xff\xfd\x03")  # DO SGA
-           
+        
             data = client_socket.recv(1024)
             accepted_terms = [b'\xff\xfd\x01', b"\xff\xfb\x1f\xff\xfb \xff\xfb\x18\xff\xfb'\xff\xfd\x01\xff\xfb\x03\xff\xfd\x03"]
             if data not in accepted_terms:
@@ -348,8 +358,6 @@ def start_bbs_server(client_side, port):
             
             client_thread.start()
 
-        except Exception as e:
-            print(f"Fatal error: {e}")
-            import traceback
-            traceback.print_exc()
-            raise
+    except Exception as e:
+        print(f"Fatal error: {e}")
+            
