@@ -165,6 +165,7 @@ def save_biscuit(server, biscuit):
 
 def move_cursor(row: int, col: int) -> None:
     """Move the terminal cursor to the given row and column (1-based)."""
+    sys.stdout.write(f"\x1b[H")
     sys.stdout.write(f"\x1b[{row};{col}H")
     sys.stdout.flush()
 

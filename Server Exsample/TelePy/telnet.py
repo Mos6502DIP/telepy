@@ -44,8 +44,12 @@ class setup_connection():
     def clear(self):
         self.tn.write(b"\033[2J\033[H")
 
+    def bell(self):
+        self.tn.write(b"\a")
+
     def move_cursor(self, row: int, col: int) -> None:
         """Move the terminal cursor to the given row and column (1-based)."""
+        self.tn.write(b"\x1b[H")
         bite = f"\x1b[{row};{col}H".encode("UTF-8")
         self.tn.write(bite)
         
@@ -200,8 +204,11 @@ class dum_ter:
         self.ip = connection.ip
         self.socket = connection.socket
     
-    def print(self, string):
-        self.connection.print(string)
+    def print(self, string, end="new"):
+        if end == "new":
+            self.connection.print(string)
+        else:
+            self.connection.print_no_new_line(string)
         
     def input(self, string):
         user_input = self.connection.input(string)
@@ -288,8 +295,10 @@ def handle_connection(connection, clientside):
         bot_test_code = str(random.randint(100000, 999999))
         connection.socket.settimeout(10)
         
-        
-        
+        connection.print(f'Fractal was here!') # fixes a bug do not remove
+        connection.clear()
+        if connection.terminal_data == b'\r\x00\xff\xfd\x01\xff\xfd\x03\xff\xfb\x03':
+            connection.bell()
         connection.print(f'Access Code : {bot_test_code}')
         connection.print(f'{colour("Powered Via Telepy", "green")} by {colour("Peter Cakebread", "blue")} 2026 v{version}')
         
@@ -303,6 +312,9 @@ def handle_connection(connection, clientside):
             connection.print(colour('! Invalid access code reconnect and try again !', 'red'))
             connection.socket.close()
             return
+
+        
+            
 
         terminal = dum_ter(connection)
         clientside(terminal)
@@ -342,6 +354,8 @@ def start_bbs_server(client_side, port):
             accepted_terms = [b'\xff\xfd\x01', b"\xff\xfb\x1f\xff\xfb \xff\xfb\x18\xff\xfb'\xff\xfd\x01\xff\xfb\x03\xff\xfd\x03"]
             if data not in accepted_terms:
                 print(data)
+
+            
                 
             print(f"Connection from {client_address}")
             client_socket.settimeout(10)
@@ -350,6 +364,7 @@ def start_bbs_server(client_side, port):
             tn.sock = client_socket
             connection = setup_connection(tn, client_socket)
 
+            connection.terminal_data = data
             client_thread = threading.Thread(
                 target=handle_connection_wrapper,
                 args=(connection, client_side),

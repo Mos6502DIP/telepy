@@ -75,6 +75,8 @@ def clientside(client):
     client.print(f"Normal input:{user_input} Password input:{password} Hidden input:{hidden}")
     txt(client,"Test")
 
+    client.print("Same", end="")
+    client.print("Line!")
     client.input('Pause Press enter to continue :>')
     
     client.print("Colour test!")
@@ -83,10 +85,10 @@ def clientside(client):
                "light_red", "light_green", "light_yellow",
                "light_blue", "light_magenta", "light_cyan", "white"]  # compatible colours
 
-    for bg_colour in colours:
-        for colour in colours:
-            colour_data = [colour, bg_colour]
-            client.printc(f"Telepy 2024 (Foreground colour {colour}, Background colour {bg_colour} )", colour_data)
+    # for bg_colour in colours:
+    for colour in colours:
+        colour_data = [colour, "green"]
+        client.printc(f"Telepy 2021-2026 (Foreground colour {colour}, Background colour {"green"} )", colour_data)
         #client.input('Pause Press enter to continue')
 
     # 2d array test
