@@ -1,1 +1,1 @@
-{"default_server": "@", "auto_return": false, "switch_consent": false}
+{"default_server": "telepy.net", "auto_return": false, "switch_consent": false}
